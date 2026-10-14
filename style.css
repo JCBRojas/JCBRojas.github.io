@@ -15,32 +15,32 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #12110f;
-    --bg-2: #1a1815;
-    --surface: #1e1c19;
-    --text: #ece6dc;
-    --muted: #9c9285;
-    --line: #2f2b26;
-    --accent: #e8894a;
-    --accent-soft: rgba(232, 137, 74, .12);
-    --code-bg: #0b0a09;
-    --code-text: #ece6dc;
+    --bg: #111113;
+    --bg-2: #18181b;
+    --surface: #1c1c1f;
+    --text: #ececee;
+    --muted: #a1a1aa;
+    --line: #2c2c31;
+    --accent: #e09868;
+    --accent-soft: rgba(224, 152, 104, .12);
+    --code-bg: #0b0b0d;
+    --code-text: #e4e4e7;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 16px 40px -16px rgba(0, 0, 0, .6);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #12110f;
-  --bg-2: #1a1815;
-  --surface: #1e1c19;
-  --text: #ece6dc;
-  --muted: #9c9285;
-  --line: #2f2b26;
-  --accent: #e8894a;
-  --accent-soft: rgba(232, 137, 74, .12);
-  --code-bg: #0b0a09;
-  --code-text: #ece6dc;
+  --bg: #111113;
+  --bg-2: #18181b;
+  --surface: #1c1c1f;
+  --text: #ececee;
+  --muted: #a1a1aa;
+  --line: #2c2c31;
+  --accent: #e09868;
+  --accent-soft: rgba(224, 152, 104, .12);
+  --code-bg: #0b0b0d;
+  --code-text: #e4e4e7;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 16px 40px -16px rgba(0, 0, 0, .6);
   color-scheme: dark;
 }
@@ -218,6 +218,9 @@ body { overflow-x: hidden; }
 .b2 { width: 380px; height: 380px; background: #c2416b; top: 80px; right: -60px; animation-duration: 22s; animation-delay: -6s; }
 .b3 { width: 320px; height: 320px; background: #5b6cf0; bottom: 40px; left: 40%; animation-duration: 26s; animation-delay: -12s; opacity: .35; }
 :root[data-theme="light"] .blob { opacity: .32; }
+/* Dark theme: quieter, more neutral banner */
+:root[data-theme="dark"] .blob { opacity: .22; filter: blur(90px) saturate(.6); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) .blob { opacity: .22; filter: blur(90px) saturate(.6); } }
 @media (prefers-color-scheme: light) { :root:not([data-theme]) .blob { opacity: .32; } }
 .grid-overlay {
   position: absolute; inset: 0;
@@ -273,3 +276,5 @@ body { overflow-x: hidden; }
 .skill.is-visible:hover { transform: translateY(-3px); }
 .card.is-visible:hover { transform: translateX(3px); }
 .hero > * { min-width: 0; }
+:root[data-theme="dark"] .btn--primary, :root[data-theme="dark"] .brand__mark { color: #18181b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) .btn--primary, :root:not([data-theme]) .brand__mark { color: #18181b; } }
