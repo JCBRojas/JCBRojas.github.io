@@ -1,253 +1,418 @@
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Camilo Rojas · Desarrollador Full-stack</title>
-  <meta name="description" content="Juan Camilo Baños Rojas — Desarrollador web PHP y Laravel en Rionegro, Antioquia. Más de 10 años en tecnología y docente de programación.">
-  <meta property="og:title" content="Camilo Rojas · Full-stack Developer">
-  <meta property="og:description" content="Desarrollador web full-stack y docente de programación. Laravel · Livewire · Tailwind · MySQL.">
-  <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23d97a3a'/><text x='16' y='22' font-family='monospace' font-size='16' font-weight='700' text-anchor='middle' fill='white'>CR</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script>
-    // Apply saved/system theme before paint to avoid a flash
-    try {
-      const t = localStorage.getItem('theme');
-      if (t) document.documentElement.dataset.theme = t;
-    } catch (e) {}
-  </script>
-</head>
-<body>
-  <a class="skip" href="#main" data-i18n="skip">Saltar al contenido</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Camilo Rojas · Desarrollador Full-stack</title>
+    <meta
+      name="description"
+      content="Juan Camilo Baños Rojas — Desarrollador web PHP y Laravel en Rionegro, Antioquia. Más de 4 años de experiencia y docente de programación."
+    />
+    <meta property="og:title" content="Camilo Rojas · Full-stack Developer" />
+    <meta
+      property="og:description"
+      content="Desarrollador web full-stack y docente de programación. Laravel · Livewire · Tailwind · MySQL."
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23d97a3a'/><text x='16' y='22' font-family='monospace' font-size='16' font-weight='700' text-anchor='middle' fill='white'>CR</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      // Apply saved/system theme before paint to avoid a flash
+      try {
+        const t = localStorage.getItem("theme");
+        if (t) document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main" data-i18n="skip">Saltar al contenido</a>
 
-  <header class="nav">
-    <div class="wrap nav__inner">
-      <a href="#top" class="brand" aria-label="Camilo Rojas">
-        <span class="brand__mark">CR</span>
-        <span class="brand__name">camilo<span class="accent">.</span>rojas</span>
-      </a>
-      <nav class="nav__links" aria-label="Secciones">
-        <a href="#about" data-i18n="nav.about">Sobre mí</a>
-        <a href="#skills" data-i18n="nav.skills">Habilidades</a>
-        <a href="#experience" data-i18n="nav.experience">Experiencia</a>
-        <a href="#education" data-i18n="nav.education">Formación</a>
-        <a href="#contact" data-i18n="nav.contact">Contacto</a>
-      </nav>
-      <div class="nav__actions">
-        <button class="chip" id="langToggle" type="button" aria-label="Cambiar idioma / Change language">
-          <span data-lang="es">ES</span><span class="sep">/</span><span data-lang="en">EN</span>
-        </button>
-        <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar tema">
-          <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-          <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main id="main">
-    <!-- HERO -->
-    <section class="hero wrap" id="top">
-      <div class="hero__text">
-        <p class="eyebrow mono"><span class="dot"></span><span data-i18n="hero.status">Disponible para nuevos proyectos</span></p>
-        <h1>Juan Camilo<br>Baños Rojas</h1>
-        <p class="hero__role" data-i18n="hero.role">Web developer · PHP &amp; Laravel</p>
-        <p class="hero__lead" data-i18n="hero.lead">Más que un desarrollador, un <em>artesano del backend</em>. Construyo aplicaciones web con Laravel que resuelven procesos reales, y enseño a otros a hacerlo.</p>
-        <div class="hero__cta">
-          <a class="btn btn--primary" href="#contact" data-i18n="hero.cta1">Hablemos</a>
-          <a class="btn btn--ghost" href="https://www.linkedin.com/in/jcamilorojas" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn btn--ghost" href="https://github.com/JCBRojas" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
-            GitHub
-          </a>
+    <header class="nav">
+      <div class="wrap nav__inner">
+        <a href="#top" class="brand" aria-label="Camilo Rojas">
+          <span class="brand__mark">CR</span>
+          <span class="brand__name"
+            >camilo<span class="accent">.</span>rojas</span
+          >
+        </a>
+        <nav class="nav__links" aria-label="Secciones">
+          <a href="#about" data-i18n="nav.about">Sobre mí</a>
+          <a href="#skills" data-i18n="nav.skills">Habilidades</a>
+          <a href="#experience" data-i18n="nav.experience">Experiencia</a>
+          <a href="#education" data-i18n="nav.education">Formación</a>
+          <a href="#contact" data-i18n="nav.contact">Contacto</a>
+        </nav>
+        <div class="nav__actions">
+          <button
+            class="chip"
+            id="langToggle"
+            type="button"
+            aria-label="Cambiar idioma / Change language"
+          >
+            <span data-lang="es">ES</span><span class="sep">/</span
+            ><span data-lang="en">EN</span>
+          </button>
+          <button
+            class="icon-btn"
+            id="themeToggle"
+            type="button"
+            aria-label="Cambiar tema"
+          >
+            <svg
+              class="i-sun"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+            <svg
+              class="i-moon"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
         </div>
       </div>
+    </header>
 
-      <figure class="code-card" aria-hidden="true">
-        <div class="code-card__bar"><i></i><i></i><i></i><span class="mono">routes/web.php</span></div>
-<pre class="mono"><code><span class="c">// Así trabajo / How I work</span>
+    <main id="main">
+      <!-- HERO -->
+      <div class="banner" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="grid-overlay"></span></div>
+      <section class="hero wrap" id="top">
+        <div class="hero__text hero-in">
+          <p class="eyebrow mono">
+            <span class="dot"></span
+            ><span data-i18n="hero.status"
+              >Disponible para nuevos proyectos</span
+            >
+          </p>
+          <h1>Juan Camilo<br />Baños Rojas</h1>
+          <p class="hero__role" data-i18n="hero.role">
+            Web developer · PHP &amp; Laravel
+          </p>
+          <p class="hero__lead" data-i18n="hero.lead">
+            Más que un desarrollador, un <em>artesano del backend</em>.
+            Construyo aplicaciones web con Laravel que resuelven procesos
+            reales, y enseño a otros a hacerlo.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#contact" data-i18n="hero.cta1"
+              >Hablemos</a
+            >
+            <a
+              class="btn btn--ghost"
+              href="https://www.linkedin.com/in/jcamilorojas"
+              target="_blank"
+              rel="noopener"
+              >LinkedIn</a
+            >
+            <a
+              class="btn btn--ghost"
+              href="https://github.com/JCBRojas"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"
+                />
+              </svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+
+        <figure class="code-card hero-in hero-in--late" aria-hidden="true">
+          <div class="code-card__bar">
+            <i></i><i></i><i></i><span class="mono">routes/web.php</span>
+          </div>
+          <pre
+            class="mono"
+          ><code><span class="c">// Así trabajo / How I work</span>
 <span class="k">Route</span>::<span class="f">middleware</span>([<span class="s">'auth'</span>, <span class="s">'role:dev'</span>])
   -&gt;<span class="f">group</span>(<span class="k">function</span> () {
     <span class="k">Craft</span>::<span class="f">build</span>(<span class="s">'clean-code'</span>);
     <span class="k">Craft</span>::<span class="f">scale</span>(<span class="s">'real-world-apps'</span>);
     <span class="k">Craft</span>::<span class="f">teach</span>(<span class="s">'next-devs'</span>);
   });</code></pre>
-      </figure>
-    </section>
+        </figure>
+      </section>
 
-    <!-- ABOUT -->
-    <section class="section wrap" id="about">
-      <header class="section__head">
-        <span class="mono num">01</span>
-        <h2 data-i18n="about.title">Sobre mí</h2>
-      </header>
-      <div class="about">
-        <div class="about__text">
-          <p data-i18n="about.p1">Soy desarrollador web especializado en <strong>PHP y Laravel</strong>, con más de 10 años de trayectoria en tecnología: soporte técnico, administración de sistemas, docencia y desarrollo de software. Construyo sistemas de gestión con autenticación, control de roles y permisos, reportes en PDF y Excel, y funcionalidades en tiempo real.</p>
-          <p data-i18n="about.p2">También he sido <strong>docente de programación</strong>, enseñando PHP, bases de datos y C#. Enseñar me obliga a escribir código claro, explicable y fácil de mantener, y eso se nota en cada proyecto.</p>
-          <p data-i18n="about.p3">Actualmente curso <strong>Ingeniería de Software y Datos</strong> en la IU Digital de Antioquia.</p>
+      <!-- ABOUT -->
+      <section class="section wrap" id="about">
+        <header class="section__head reveal">
+          <span class="mono num">01</span>
+          <h2 data-i18n="about.title">Sobre mí</h2>
+        </header>
+        <div class="about">
+          <p class="about__text reveal" data-i18n="about.p1">
+            Desarrollador web <strong>PHP y Laravel</strong> con más de 4 años
+            de experiencia y trayectoria como <strong>docente de
+            programación</strong>. Creo sistemas de gestión claros, seguros y
+            fáciles de mantener. Actualmente estudio
+            <strong>Ingeniería de Software y Datos</strong>.
+          </p>
+          <ul class="facts reveal">
+            <li>
+              <span class="facts__k mono" data-i18n="about.f0k">Ubicación</span
+              ><span>Rionegro, Antioquia 🇨🇴</span>
+            </li>
+            <li>
+              <span class="facts__k mono" data-i18n="about.f1k">Enfoque</span
+              ><span data-i18n="about.f1v">Backend · Full-stack</span>
+            </li>
+            <li>
+              <span class="facts__k mono" data-i18n="about.f3k">Docencia</span
+              ><span>PHP · SQL · C#</span>
+            </li>
+          </ul>
         </div>
-        <ul class="facts">
-          <li><span class="facts__k mono" data-i18n="about.f0k">Ubicación</span><span>Rionegro, Antioquia 🇨🇴</span></li>
-          <li><span class="facts__k mono" data-i18n="about.f5k">Trayectoria</span><span data-i18n="about.f5v">+10 años en TI</span></li>
-          <li><span class="facts__k mono" data-i18n="about.f1k">Enfoque</span><span data-i18n="about.f1v">Backend · Full-stack</span></li>
-          <li><span class="facts__k mono" data-i18n="about.f2k">Framework</span><span>Laravel + Livewire</span></li>
-          <li><span class="facts__k mono" data-i18n="about.f3k">Docencia</span><span>PHP · SQL · C#</span></li>
-          <li><span class="facts__k mono" data-i18n="about.f4k">Idiomas</span><span data-i18n="about.f4v">Español</span></li>
+      </section>
+
+      <!-- SKILLS -->
+      <section class="section wrap" id="skills">
+        <header class="section__head reveal">
+          <span class="mono num">02</span>
+          <h2 data-i18n="skills.title">Habilidades</h2>
+        </header>
+        <ul class="skill-grid">
+          <li class="skill reveal"><span class="skill__ico mono">php</span>PHP</li>
+          <li class="skill reveal"><span class="skill__ico mono">lv</span>Laravel</li>
+          <li class="skill reveal"><span class="skill__ico mono">lw</span>Livewire</li>
+          <li class="skill reveal"><span class="skill__ico mono">sql</span>MySQL</li>
+          <li class="skill reveal"><span class="skill__ico mono">js</span>JavaScript</li>
+          <li class="skill reveal"><span class="skill__ico mono">tw</span>Tailwind CSS</li>
+          <li class="skill reveal"><span class="skill__ico mono">api</span>REST APIs</li>
+          <li class="skill reveal"><span class="skill__ico mono">git</span>Git &amp; GitHub</li>
         </ul>
-      </div>
-    </section>
+      </section>
 
-    <!-- SKILLS -->
-    <section class="section wrap" id="skills">
-      <header class="section__head">
-        <span class="mono num">02</span>
-        <h2 data-i18n="skills.title">Habilidades</h2>
-      </header>
-      <div class="skills">
-        <article class="skill-group">
-          <h3 data-i18n="skills.backend">Backend</h3>
-          <ul class="tags">
-            <li>PHP 8</li><li>Laravel</li><li>Livewire</li><li>Jetstream</li><li>Sanctum</li>
-            <li>REST APIs</li><li>MVC</li><li>Symfony</li><li>WordPress</li><li data-i18n="skills.rbac">Roles y permisos (Spatie)</li><li>C#</li>
-          </ul>
-        </article>
-        <article class="skill-group">
-          <h3 data-i18n="skills.frontend">Frontend</h3>
-          <ul class="tags">
-            <li>Blade</li><li>Tailwind CSS</li><li>JavaScript</li><li>Alpine.js</li><li>Vite</li><li>HTML5 / CSS3</li>
-          </ul>
-        </article>
-        <article class="skill-group">
-          <h3 data-i18n="skills.data">Bases de datos</h3>
-          <ul class="tags">
-            <li>MySQL</li><li>PostgreSQL</li><li>SQLite</li><li data-i18n="skills.modeling">Modelado de datos</li><li data-i18n="skills.analysis">Análisis de datos</li><li>Eloquent ORM</li>
-          </ul>
-        </article>
-        <article class="skill-group">
-          <h3 data-i18n="skills.tools">Herramientas e integraciones</h3>
-          <ul class="tags">
-            <li>Git &amp; GitHub</li><li>Node.js</li><li data-i18n="skills.realtime">Tiempo real (Pusher / Echo)</li>
-            <li data-i18n="skills.reports">Reportes PDF y Excel</li><li data-i18n="skills.backups">Respaldos automatizados</li><li data-i18n="skills.support">Soporte y mantenimiento de equipos</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+      <!-- EXPERIENCE -->
+      <section class="section wrap" id="experience">
+        <header class="section__head reveal">
+          <span class="mono num">03</span>
+          <h2 data-i18n="exp.title">Experiencia</h2>
+        </header>
+        <ol class="timeline">
+          <li class="timeline__item reveal">
+            <div class="timeline__meta mono">
+              <span data-i18n="exp.d1">jun 2020 — sep 2026</span
+              ><span class="timeline__dur" data-i18n="exp.l1"
+                >6 años 4 meses</span
+              >
+            </div>
+            <div class="timeline__body">
+              <h3 data-i18n="exp.serviucis.role">
+                Técnico de sistemas informáticos
+              </h3>
+              <p class="timeline__org">Serviucis S.A.</p>
+              <p data-i18n="exp.serviucis.desc">
+                Soporte y administración de la infraestructura tecnológica, y
+                desarrollo de aplicaciones web internas con Laravel para
+                digitalizar procesos administrativos y operativos: control de
+                acceso por roles, reportes y notificaciones en tiempo real.
+              </p>
+              <ul class="tags tags--sm">
+                <li>Laravel</li>
+                <li>Livewire</li>
+                <li>MySQL</li>
+                <li data-i18n="exp.tag.support">Soporte TI</li>
+              </ul>
+            </div>
+          </li>
+          <li class="timeline__item reveal">
+            <div class="timeline__meta mono">
+              <span data-i18n="exp.d2">may 2023 — ene 2025</span
+              ><span class="timeline__dur" data-i18n="exp.l2"
+                >1 año 9 meses</span
+              >
+            </div>
+            <div class="timeline__body">
+              <h3 data-i18n="exp.censa.role">Profesor</h3>
+              <p class="timeline__org">
+                Centro de Sistemas de Antioquia — CENSA · Rionegro
+              </p>
+              <p data-i18n="exp.censa.desc">
+                Formación en programación web con PHP, programación orientada a
+                objetos, bases de datos relacionales y C#, con un enfoque
+                práctico basado en proyectos.
+              </p>
+              <ul class="tags tags--sm">
+                <li>PHP</li>
+                <li data-i18n="exp.tag.oop">POO</li>
+                <li>SQL</li>
+                <li>C#</li>
+              </ul>
+            </div>
+          </li>
+          <li class="timeline__item reveal">
+            <div class="timeline__meta mono">
+              <span data-i18n="exp.d3">dic 2017 — jul 2020</span
+              ><span class="timeline__dur" data-i18n="exp.l3"
+                >2 años 8 meses</span
+              >
+            </div>
+            <div class="timeline__body">
+              <h3 data-i18n="exp.unisys.role">
+                Analista de servicio técnico REP 3
+              </h3>
+              <p class="timeline__org">Unisys</p>
+              <p data-i18n="exp.unisys.desc">
+                Soporte técnico y atención de incidentes en un entorno
+                corporativo multinacional, con diagnóstico y resolución de
+                problemas de hardware y software.
+              </p>
+            </div>
+          </li>
+          <li class="timeline__item reveal">
+            <div class="timeline__meta mono">
+              <span data-i18n="exp.d4">feb 2015 — feb 2016</span
+              ><span class="timeline__dur" data-i18n="exp.l4">1 año 1 mes</span>
+            </div>
+            <div class="timeline__body">
+              <h3 data-i18n="exp.cetasdi.role">
+                Docente en programación · Técnico informático
+              </h3>
+              <p class="timeline__org">Cetasdi</p>
+              <p data-i18n="exp.cetasdi.desc">
+                Enseñanza de fundamentos de programación y soporte técnico a los
+                equipos de la institución.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
 
-    <!-- EXPERIENCE -->
-    <section class="section wrap" id="experience">
-      <header class="section__head">
-        <span class="mono num">03</span>
-        <h2 data-i18n="exp.title">Experiencia</h2>
-      </header>
-      <ol class="timeline">
-        <li class="timeline__item">
-          <div class="timeline__meta mono"><span data-i18n="exp.d1">jun 2020 — sep 2026</span><span class="timeline__dur" data-i18n="exp.l1">6 años 4 meses</span></div>
-          <div class="timeline__body">
-            <h3 data-i18n="exp.serviucis.role">Técnico de sistemas informáticos</h3>
-            <p class="timeline__org">Serviucis S.A.</p>
-            <p data-i18n="exp.serviucis.desc">Soporte y administración de la infraestructura tecnológica, y desarrollo de aplicaciones web internas con Laravel para digitalizar procesos administrativos y operativos: control de acceso por roles, reportes y notificaciones en tiempo real.</p>
-            <ul class="tags tags--sm"><li>Laravel</li><li>Livewire</li><li>MySQL</li><li data-i18n="exp.tag.support">Soporte TI</li></ul>
+      <!-- EDUCATION -->
+      <section class="section wrap" id="education">
+        <header class="section__head reveal">
+          <span class="mono num">04</span>
+          <h2 data-i18n="edu.title">Formación</h2>
+        </header>
+        <div class="edu">
+          <div>
+            <h3 class="edu__sub mono" data-i18n="edu.studies">Educación</h3>
+            <ul class="cards">
+              <li class="card reveal">
+                <span class="badge" data-i18n="edu.ongoing">En curso</span>
+                <h4 data-i18n="edu.iud.title">
+                  Ingeniería de Software y Datos
+                </h4>
+                <p>
+                  IU Digital de Antioquia ·
+                  <span data-i18n="edu.iud.date">2026 — 2030</span>
+                </p>
+              </li>
+              <li class="card reveal">
+                <h4 data-i18n="edu.cetasdi.title">
+                  Técnico en Sistemas — Programación informática
+                </h4>
+                <p>Cetasdi · 2014 — 2015</p>
+              </li>
+              <li class="card reveal">
+                <h4 data-i18n="edu.sena1.title">
+                  Mantenimiento de equipos de cómputo
+                </h4>
+                <p>SENA · 2015 — 2016</p>
+              </li>
+              <li class="card reveal">
+                <h4 data-i18n="edu.sena2.title">
+                  Metodología de programación de sistemas informáticos
+                </h4>
+                <p>SENA</p>
+              </li>
+            </ul>
           </div>
-        </li>
-        <li class="timeline__item">
-          <div class="timeline__meta mono"><span data-i18n="exp.d2">may 2023 — ene 2025</span><span class="timeline__dur" data-i18n="exp.l2">1 año 9 meses</span></div>
-          <div class="timeline__body">
-            <h3 data-i18n="exp.censa.role">Profesor</h3>
-            <p class="timeline__org">Centro de Sistemas de Antioquia — CENSA · Rionegro</p>
-            <p data-i18n="exp.censa.desc">Formación en programación web con PHP, programación orientada a objetos, bases de datos relacionales y C#, con un enfoque práctico basado en proyectos.</p>
-            <ul class="tags tags--sm"><li>PHP</li><li data-i18n="exp.tag.oop">POO</li><li>SQL</li><li>C#</li></ul>
+          <div>
+            <h3 class="edu__sub mono" data-i18n="edu.certs">Certificaciones</h3>
+            <ul class="cards">
+              <li class="card reveal">
+                <h4>
+                  Master en PHP, SQL, POO, MVC, Laravel, Symfony &amp; WordPress
+                </h4>
+                <p data-i18n="edu.cert.php">Desarrollo web backend completo</p>
+              </li>
+              <li class="card reveal">
+                <h4>Claude 101</h4>
+                <p>Claude Academy · Anthropic</p>
+              </li>
+            </ul>
           </div>
-        </li>
-        <li class="timeline__item">
-          <div class="timeline__meta mono"><span data-i18n="exp.d3">dic 2017 — jul 2020</span><span class="timeline__dur" data-i18n="exp.l3">2 años 8 meses</span></div>
-          <div class="timeline__body">
-            <h3 data-i18n="exp.unisys.role">Analista de servicio técnico REP 3</h3>
-            <p class="timeline__org">Unisys</p>
-            <p data-i18n="exp.unisys.desc">Soporte técnico y atención de incidentes en un entorno corporativo multinacional, con diagnóstico y resolución de problemas de hardware y software.</p>
-          </div>
-        </li>
-        <li class="timeline__item">
-          <div class="timeline__meta mono"><span data-i18n="exp.d4">feb 2015 — feb 2016</span><span class="timeline__dur" data-i18n="exp.l4">1 año 1 mes</span></div>
-          <div class="timeline__body">
-            <h3 data-i18n="exp.cetasdi.role">Docente en programación · Técnico informático</h3>
-            <p class="timeline__org">Cetasdi</p>
-            <p data-i18n="exp.cetasdi.desc">Enseñanza de fundamentos de programación y soporte técnico a los equipos de la institución.</p>
-          </div>
-        </li>
-      </ol>
-    </section>
-
-    <!-- EDUCATION -->
-    <section class="section wrap" id="education">
-      <header class="section__head">
-        <span class="mono num">04</span>
-        <h2 data-i18n="edu.title">Formación</h2>
-      </header>
-      <div class="edu">
-        <div>
-          <h3 class="edu__sub mono" data-i18n="edu.studies">Educación</h3>
-          <ul class="cards">
-            <li class="card">
-              <span class="badge" data-i18n="edu.ongoing">En curso</span>
-              <h4 data-i18n="edu.iud.title">Ingeniería de Software y Datos</h4>
-              <p>IU Digital de Antioquia · <span data-i18n="edu.iud.date">2026 — 2030</span></p>
-            </li>
-            <li class="card">
-              <h4 data-i18n="edu.cetasdi.title">Técnico en Sistemas — Programación informática</h4>
-              <p>Cetasdi · 2014 — 2015</p>
-            </li>
-            <li class="card">
-              <h4 data-i18n="edu.sena1.title">Mantenimiento de equipos de cómputo</h4>
-              <p>SENA · 2015 — 2016</p>
-            </li>
-            <li class="card">
-              <h4 data-i18n="edu.sena2.title">Metodología de programación de sistemas informáticos</h4>
-              <p>SENA</p>
-            </li>
-          </ul>
         </div>
-        <div>
-          <h3 class="edu__sub mono" data-i18n="edu.certs">Certificaciones</h3>
-          <ul class="cards">
-            <li class="card">
-              <h4>Master en PHP, SQL, POO, MVC, Laravel, Symfony &amp; WordPress</h4>
-              <p data-i18n="edu.cert.php">Desarrollo web backend completo</p>
-            </li>
-            <li class="card">
-              <h4>Claude 101</h4>
-              <p>Claude Academy · Anthropic</p>
-            </li>
-          </ul>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="section wrap" id="contact">
+        <header class="section__head reveal">
+          <span class="mono num">05</span>
+          <h2 data-i18n="contact.title">Contacto</h2>
+        </header>
+        <div class="contact reveal">
+          <p class="contact__lead" data-i18n="contact.lead">
+            ¿Tienes un proyecto, una vacante o una idea? Escríbeme y
+            conversemos.
+          </p>
+          <div class="contact__links">
+            <a class="btn btn--primary" href="mailto:camilo.brojas@outlook.com"
+              >camilo.brojas@outlook.com</a
+            >
+            <a
+              class="btn btn--ghost"
+              href="https://www.linkedin.com/in/jcamilorojas"
+              target="_blank"
+              rel="noopener"
+              >LinkedIn</a
+            >
+            <a
+              class="btn btn--ghost"
+              href="https://github.com/JCBRojas"
+              target="_blank"
+              rel="noopener"
+              >GitHub</a
+            >
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <!-- CONTACT -->
-    <section class="section wrap" id="contact">
-      <header class="section__head">
-        <span class="mono num">05</span>
-        <h2 data-i18n="contact.title">Contacto</h2>
-      </header>
-      <div class="contact">
-        <p class="contact__lead" data-i18n="contact.lead">¿Tienes un proyecto, una vacante o una idea? Escríbeme y conversemos.</p>
-        <div class="contact__links">
-          <a class="btn btn--primary" href="mailto:camilo.brojas@outlook.com">camilo.brojas@outlook.com</a>
-          <a class="btn btn--ghost" href="https://www.linkedin.com/in/jcamilorojas" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn btn--ghost" href="https://github.com/JCBRojas" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
-    </section>
-  </main>
+    <footer class="footer wrap">
+      <p class="mono">
+        © <span id="year"></span> Juan Camilo Baños Rojas ·
+        <span data-i18n="footer">Hecho a mano, como el buen backend.</span>
+      </p>
+    </footer>
 
-  <footer class="footer wrap">
-    <p class="mono">© <span id="year"></span> Juan Camilo Baños Rojas · <span data-i18n="footer">Hecho a mano, como el buen backend.</span></p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

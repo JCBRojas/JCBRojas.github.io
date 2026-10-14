@@ -7,12 +7,7 @@ const EN = {
   'nav.contact': 'Contact',
   'hero.status': 'Open to new projects',
   'nav.education': 'Education',
-  'about.p3': 'I am currently studying <strong>Software and Data Engineering</strong> at IU Digital de Antioquia.',
   'about.f0k': 'Location',
-  'about.f5k': 'Background',
-  'about.f5v': '10+ years in IT',
-  'skills.analysis': 'Data analysis',
-  'skills.support': 'Hardware support &amp; maintenance',
   'exp.d1': 'Jun 2020 — Sep 2026',
   'exp.l1': '6 yrs 4 mos',
   'exp.serviucis.role': 'IT Systems Technician',
@@ -45,24 +40,11 @@ const EN = {
   'hero.lead': 'More than a developer — a <em>backend craftsman</em>. I build Laravel web applications that solve real-world processes, and I teach others how to do it.',
   'hero.cta1': "Let's talk",
   'about.title': 'About me',
-  'about.p1': 'I am a full-stack web developer with a backend focus. I work mainly with <strong>PHP and Laravel</strong>, building management systems with authentication, role-based access control, PDF and Excel reporting, and real-time features.',
-  'about.p2': 'I am also a <strong>programming instructor</strong>, teaching PHP, databases and C#. Teaching pushes me to write code that is clear, explainable and easy to maintain — and it shows in every project.',
+  'about.p1': 'PHP &amp; Laravel web developer with 4+ years of experience and a background as a <strong>programming instructor</strong>. I build management systems that are clear, secure and easy to maintain. Currently studying <strong>Software and Data Engineering</strong>.',
   'about.f1k': 'Focus',
   'about.f1v': 'Backend · Full-stack',
-  'about.f2k': 'Framework',
   'about.f3k': 'Teaching',
-  'about.f4k': 'Languages',
-  'about.f4v': 'Spanish',
   'skills.title': 'Skills',
-  'skills.backend': 'Backend',
-  'skills.rbac': 'Roles &amp; permissions (Spatie)',
-  'skills.frontend': 'Frontend',
-  'skills.data': 'Databases',
-  'skills.modeling': 'Data modeling',
-  'skills.tools': 'Tools &amp; integrations',
-  'skills.realtime': 'Real-time (Pusher / Echo)',
-  'skills.reports': 'PDF &amp; Excel reports',
-  'skills.backups': 'Automated backups',
   'exp.title': 'Experience',
   'exp.now': 'Present',
   'exp.dev.role': 'Full-stack Web Developer',
@@ -104,5 +86,21 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   root.dataset.theme = next;
   try { localStorage.setItem('theme', next); } catch (e) {}
 });
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach((el, i) => {
+    el.style.setProperty('--d', (i % 4) * 70 + 'ms');
+    io.observe(el);
+  });
+} else {
+  reveals.forEach(el => el.classList.add('is-visible'));
+}
 
 document.getElementById('year').textContent = new Date().getFullYear();
