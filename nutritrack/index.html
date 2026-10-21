@@ -1,0 +1,1172 @@
+<title>NutriTrack Demo Premium</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  /* Diseño: menú lateral violeta fijo + área de trabajo con tarjetas y tablas; paleta NUT-CMP-001,
+     botones con colores de Bootstrap 5.3 y etiquetas de dietas con sus colores originales. */
+  :root {
+    --bg: #EEF0FA; --surface: #FFFFFF; --surface2: #E6E8F5; --line: #DCDFF0;
+    --ink: #1F2340; --muted: #5E6384;
+    --brand: #6C5DD3; --brand-hover: #5A4BC2; --brand-text: #5B4CC4; --brand-soft: #E8E5FB; --brand-soft-ink: #4A3BB0;
+    --ok: #166534; --ok-soft: #E3F4EA; --err: #B91C1C; --err-soft: #FDECEC; --warn: #92400E; --warn-soft: #FEF3E2;
+    /* Etiquetas del catálogo de dietas (colores originales) */
+    --t-time: #4A7FCB; --t-time-bg: #DDEAF8; --t-cons: #2D6A4F; --t-cons-bg: #D8F3DC; --t-spec: #7B5EA7; --t-spec-bg: #EDE9F5;
+    --t-deliv: #0F766E; --t-deliv-ink: #FFFFFF;
+    --c-time: #3592FE; --c-time-ink: #F0EDE8; --c-cons: #F59E0B; --c-spec: #4ADF9C; --c-ink: #1A1714;
+    /* Botones Bootstrap 5.3 */
+    --b-primary: #0D6EFD; --b-primary-h: #0B5ED7; --b-secondary: #6C757D; --b-success: #198754; --b-success-h: #157347;
+    --b-danger: #DC3545; --b-danger-h: #BB2D3B; --b-warning: #FFC107; --b-warning-h: #FFCA2C; --b-info: #0DCAF0; --b-info-h: #31D2F2;
+    --b-light: #F8F9FA; --b-focus: rgba(13, 110, 253, .3);
+    --shadow: 0 1px 3px rgba(31, 35, 64, .07), 0 4px 16px rgba(31, 35, 64, .05);
+    --overlay: rgba(31, 35, 64, .55);
+    --font: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    --side-w: 248px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1C1B33; --surface: #28264A; --surface2: #322F5C; --line: #3A3766; --ink: #ECEBFA; --muted: #A9A7C9;
+      --brand-text: #A79DF0; --brand-soft: #353163; --brand-soft-ink: #C9C2FA;
+      --ok: #4ADE80; --ok-soft: #1E3A2B; --err: #F87171; --err-soft: #3A1A1F; --warn: #FBBF24; --warn-soft: #3A2E14;
+      --t-time: #9EC1F0; --t-time-bg: #1E2F4A; --t-cons: #8FD6B0; --t-cons-bg: #18352A; --t-spec: #C9B3EE; --t-spec-bg: #30264A;
+      --overlay: rgba(0, 0, 0, .6); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1C1B33; --surface: #28264A; --surface2: #322F5C; --line: #3A3766; --ink: #ECEBFA; --muted: #A9A7C9;
+    --brand-text: #A79DF0; --brand-soft: #353163; --brand-soft-ink: #C9C2FA;
+    --ok: #4ADE80; --ok-soft: #1E3A2B; --err: #F87171; --err-soft: #3A1A1F; --warn: #FBBF24; --warn-soft: #3A2E14;
+    --t-time: #9EC1F0; --t-time-bg: #1E2F4A; --t-cons: #8FD6B0; --t-cons-bg: #18352A; --t-spec: #C9B3EE; --t-spec-bg: #30264A;
+    --overlay: rgba(0, 0, 0, .6); color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 var(--font); }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  h1, h2, h3, h4 { margin: 0; line-height: 1.25; text-wrap: balance; }
+  a { color: var(--brand-text); }
+  .num { font-variant-numeric: tabular-nums; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :focus-visible { outline: 2px solid var(--b-primary); outline-offset: 2px; }
+
+  /* ── Botones (Bootstrap 5.3) ── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 14px; border-radius: 8px; border: 1px solid transparent; font-weight: 600; font-size: 13.5px; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; text-decoration: none; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-sm { padding: 4px 10px; font-size: 12.5px; }
+  .btn-primary { background: var(--b-primary); color: #fff; } .btn-primary:hover:not(:disabled) { background: var(--b-primary-h); }
+  .btn-success { background: var(--b-success); color: #fff; } .btn-success:hover:not(:disabled) { background: var(--b-success-h); }
+  .btn-danger { background: var(--b-danger); color: #fff; } .btn-danger:hover:not(:disabled) { background: var(--b-danger-h); }
+  .btn-warning { background: var(--b-warning); color: #000; } .btn-warning:hover:not(:disabled) { background: var(--b-warning-h); }
+  .btn-info { background: var(--b-info); color: #000; } .btn-info:hover:not(:disabled) { background: var(--b-info-h); }
+  .btn-ghost { background: var(--surface); color: var(--b-secondary); border-color: var(--b-secondary); }
+  .btn-ghost:hover:not(:disabled) { background: var(--b-secondary); color: #fff; }
+  .btn-outline-primary { background: var(--surface); color: var(--b-primary); border-color: var(--b-primary); }
+  .btn-outline-primary:hover:not(:disabled) { background: var(--b-primary); color: #fff; }
+  .btn-outline-danger { background: var(--surface); color: var(--b-danger); border-color: var(--b-danger); }
+  .btn-outline-danger:hover:not(:disabled) { background: var(--b-danger); color: #fff; }
+  .btn-light-outline { background: transparent; color: var(--b-light); border-color: var(--b-light); }
+  .btn-light-outline:hover { background: var(--b-light); color: #000; }
+
+  /* ── Etiquetas ── */
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 20px; font-size: 12px; font-weight: 600; line-height: 1.5; white-space: nowrap; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag-time { background: var(--t-time-bg); color: var(--t-time); }
+  .tag-cons { background: var(--t-cons-bg); color: var(--t-cons); }
+  .tag-spec { background: var(--t-spec-bg); color: var(--t-spec); }
+  .tag-recv { background: var(--t-deliv); color: var(--t-deliv-ink); }
+  .tag-sent { background: var(--surface); color: var(--t-deliv); border: 1.5px dashed var(--t-deliv); padding: 1px 8px; }
+  .tag-add { background: var(--ok-soft); color: var(--ok); }
+  .tag-del { background: var(--err-soft); color: var(--err); text-decoration: line-through; }
+  .chip-ok { background: var(--ok-soft); color: var(--ok); }
+  .chip-warn { background: var(--warn-soft); color: var(--warn); }
+  .chip-err { background: var(--err-soft); color: var(--err); }
+  .chip-brand { background: var(--brand-soft); color: var(--brand-soft-ink); }
+  .chip-muted { background: var(--surface2); color: var(--muted); }
+  .room { display: inline-block; min-width: 40px; text-align: center; padding: 2px 8px; border-radius: 6px; background: var(--ink); color: var(--bg); font: 700 12.5px var(--mono); }
+
+  /* ── Banner de demo ── */
+  .demo-bar { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 6px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px)); background: var(--warn-soft); color: var(--warn); font-size: 12.5px; font-weight: 600; text-align: center; }
+  .demo-bar button { background: none; border: 0; color: inherit; text-decoration: underline; cursor: pointer; font-weight: 700; padding: 0; }
+
+  /* ── Login ── */
+  .login { min-height: calc(100vh - 34px); display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+  .login-hero { background: var(--brand); color: #fff; padding: 56px max(24px, env(safe-area-inset-left, 0px)) 56px clamp(24px, 6vw, 72px); display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+  .login-hero .logo { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 800; letter-spacing: -.5px; }
+  .login-hero .logo::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+  .login-hero h1 { font-size: clamp(26px, 3.2vw, 38px); font-weight: 800; letter-spacing: -.6px; max-width: 520px; }
+  .login-hero p { max-width: 500px; font-size: 15.5px; margin: 0; }
+  .login-hero ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14.5px; }
+  .login-pick { padding: 48px max(16px, env(safe-area-inset-right, 0px)) 48px clamp(16px, 5vw, 56px); display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .login-pick h2 { font-size: 22px; }
+  .login-pick > p { color: var(--muted); margin: 0; }
+  .who { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .who button { text-align: left; display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; }
+  .who button:hover { border-color: var(--brand); box-shadow: var(--shadow); }
+  .who .av { width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-weight: 800; flex-shrink: 0; }
+  .who b { display: block; font-size: 14.5px; }
+  .who small { color: var(--muted); font-size: 12.5px; }
+  .tip { border-left: 4px solid var(--brand); background: var(--brand-soft); color: var(--ink); padding: 10px 14px; border-radius: 8px; font-size: 13.5px; }
+
+  /* ── App ── */
+  .app { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); min-height: calc(100vh - 34px); }
+  .side { background: var(--brand); color: #fff; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+  .side-logo { padding: 22px 20px 16px; border-bottom: 1px solid var(--brand-hover); }
+  .side-logo b { display: flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 800; }
+  .side-logo b::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+  .side-logo small { display: block; font-size: 11.5px; margin-top: 3px; }
+  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+  .nav-sec { padding: 14px 10px 6px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
+  .nav-sec:first-child { padding-top: 4px; }
+  .nav a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 500; }
+  .nav a:hover { background: var(--brand-hover); }
+  .nav a[aria-current="page"] { background: #E8E5FB; color: #4A3BB0; font-weight: 700; }
+  .nav svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .nav .count { margin-left: auto; background: var(--b-warning); color: #000; border-radius: 999px; font-size: 11px; font-weight: 800; padding: 0 7px; }
+  .side-foot { padding: 12px 10px 14px; border-top: 1px solid var(--brand-hover); display: grid; gap: 8px; }
+  .me { display: flex; align-items: center; gap: 10px; padding: 4px 8px; }
+  .me .av { width: 34px; height: 34px; border-radius: 50%; background: #fff; color: var(--brand); display: grid; place-items: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+  .me b { display: block; font-size: 13.5px; } .me small { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  .side-foot .btn { width: 100%; }
+  .nav-off { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #fff; opacity: .6; cursor: not-allowed; font-weight: 500; }
+  .nav-off .count { background: transparent; border: 1px solid currentColor; color: #fff; }
+  .plan { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,.12); color: #fff; }
+  .plan b { font-size: 13px; } .plan small { font-size: 11.5px; }
+  .plan-hero { padding: 12px 14px; max-width: 460px; }
+
+  .topbar { display: none; }
+  .work { min-width: 0; padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .work-in { max-width: 1240px; margin: 0 auto; display: grid; gap: 16px; }
+  .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .head h1 { font-size: 24px; font-weight: 800; letter-spacing: -.4px; }
+  .head p { margin: 2px 0 0; color: var(--muted); }
+  .head .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .head .actions .input { width: auto; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); min-width: 0; }
+  .card-pad { padding: 16px 18px; }
+  .card h2 { font-size: 16px; font-weight: 700; }
+  .card .sub { color: var(--muted); font-size: 13px; margin: 2px 0 0; }
+  .kpis { display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .kpi { padding: 14px 16px; }
+  .kpi span { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--muted); }
+  .kpi b { display: block; font-size: 30px; font-weight: 800; letter-spacing: -.5px; margin: 2px 0; font-variant-numeric: tabular-nums; }
+  .kpi small { color: var(--muted); font-size: 12.5px; }
+  .k-brand b { color: var(--brand-text); } .k-err b { color: var(--err); } .k-warn b { color: var(--warn); } .k-ok b { color: var(--ok); }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab { padding: 7px 14px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 600; color: var(--muted); }
+  .tab[aria-selected="true"] { background: var(--brand-soft); color: var(--brand-soft-ink); border-color: var(--brand-soft); }
+  .tab .n { display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; background: var(--b-warning); color: #000; font-size: 11px; font-weight: 800; }
+  .field { display: grid; gap: 4px; }
+  .field label, .lbl { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .input, select.input, textarea.input { width: 100%; padding: 8px 11px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+  .search { min-width: 220px; max-width: 320px; }
+  .legend { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 12px; color: var(--muted); }
+
+  .twrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); background: var(--surface2); padding: 10px 12px; white-space: nowrap; }
+  td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  tr.pending td { background: var(--warn-soft); }
+  tr.pending td:first-child { box-shadow: inset 4px 0 0 var(--warn); }
+  td.actions { white-space: nowrap; }
+  .acts { display: grid; grid-template-columns: repeat(2, auto); gap: 4px; justify-content: start; }
+  .empty { text-align: center; color: var(--muted); padding: 32px 12px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 12.5px; }
+  .diffbox { border: 2px dashed var(--warn); border-radius: 8px; padding: 4px; }
+
+  .panel { border: 1px solid var(--line); border-left: 5px solid var(--brand); background: var(--brand-soft); border-radius: 12px; padding: 12px 14px; display: grid; gap: 10px; }
+  .panel h3 { font-size: 14.5px; color: var(--brand-soft-ink); display: flex; align-items: center; gap: 8px; }
+  .panel-list { display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); }
+  .panel-item { display: flex; align-items: center; gap: 8px; background: var(--surface); border-radius: 8px; padding: 6px 8px; min-width: 0; }
+  .panel-item .grow { flex: 1 1 90px; min-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .panel-item .small, .panel-item .tag { white-space: nowrap; flex-shrink: 0; }
+
+  .dispatchbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--surface2); }
+  .check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; }
+  .check input { width: 17px; height: 17px; accent-color: var(--b-primary); }
+
+  /* Formularios: selección de etiquetas */
+  .picker { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border: 1.5px solid var(--line); border-radius: 10px; }
+  .picker:focus-within { border-color: var(--t-cons); box-shadow: 0 0 0 3px var(--t-cons-bg); }
+  .pick { border: 1px solid var(--line); background: var(--surface2); color: var(--muted); border-radius: 20px; padding: 3px 11px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .pick[aria-pressed="true"].p-time { background: var(--c-time); color: var(--c-time-ink); border-color: var(--c-time); }
+  .pick[aria-pressed="true"].p-cons { background: var(--c-cons); color: var(--c-ink); border-color: var(--c-cons); }
+  .pick[aria-pressed="true"].p-spec { background: var(--c-spec); color: var(--c-ink); border-color: var(--c-spec); }
+  .pick[aria-pressed="true"]::after { content: " ×"; }
+  .form-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  /* Modal */
+  .overlay { position: fixed; inset: 0; background: var(--overlay); display: grid; place-items: center; padding: 16px; z-index: 50; }
+  .modal { background: var(--surface); border-radius: 16px; width: min(640px, 100%); max-height: 92vh; overflow-y: auto; box-shadow: 0 18px 50px rgba(0,0,0,.25); }
+  .modal-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 22px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--surface); z-index: 1; }
+  .modal-h h2 { font-size: 17px; }
+  .x { width: 32px; height: 32px; border-radius: 8px; border: 0; background: var(--surface2); cursor: pointer; font-size: 18px; }
+  .modal-b { padding: 18px 22px; display: grid; gap: 14px; }
+  .modal-f { padding: 14px 22px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; position: sticky; bottom: 0; background: var(--surface); }
+  .box { border-radius: 10px; padding: 10px 12px; font-size: 13.5px; }
+  .box ul { margin: 6px 0 0; padding-left: 18px; }
+  .box-warn { background: var(--warn-soft); color: var(--ink); border-left: 4px solid var(--warn); }
+  .box-ok { background: var(--ok-soft); color: var(--ink); border-left: 4px solid var(--ok); }
+  .box-info { background: var(--brand-soft); color: var(--ink); border-left: 4px solid var(--brand); }
+  .err-msg { color: var(--err); font-size: 12.5px; font-weight: 600; }
+
+  /* Historial */
+  .timeline { display: grid; gap: 12px; }
+  .ver { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; }
+  .ver-h { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .ver-h b { font-size: 15px; }
+  .ver dl { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 6px 12px; margin: 0; font-size: 13.5px; }
+  .ver dt { color: var(--muted); font-weight: 600; }
+  .ver dd { margin: 0; }
+
+  /* Reporte */
+  .chart-wrap { overflow-x: auto; }
+  .chart { width: 100%; min-width: 560px; height: auto; display: block; }
+  .chart text { fill: var(--muted); font: 11px var(--font); }
+  .chart .grid { stroke: var(--line); }
+  .chart rect.seg:hover { opacity: .8; }
+  .bars { display: grid; gap: 8px; }
+  .bar-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) 90px; gap: 10px; align-items: center; font-size: 13px; }
+  .bar-track { height: 10px; background: var(--surface2); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; }
+  .grid2 { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Empresa activa */
+  .cobar { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; padding: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-size: 13px; }
+  .cobar b { color: var(--brand-text); }
+  .cobar select.input { width: auto; min-width: 0; max-width: 100%; flex: 0 1 260px; padding: 5px 10px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .opts label { text-transform: none; letter-spacing: 0; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .nit { font: 600 12.5px var(--mono); white-space: nowrap; }
+
+  .price { width: 100px; padding: 5px 8px; text-align: right; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); font-variant-numeric: tabular-nums; }
+
+  .toasts { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; z-index: 80; max-width: min(380px, calc(100vw - 32px)); }
+  .toast { background: var(--ink); color: var(--bg); padding: 11px 16px; border-radius: 10px; box-shadow: var(--shadow); font-weight: 600; font-size: 13.5px; animation: in .2s ease; }
+  @keyframes in { from { transform: translateY(8px); opacity: .4; } }
+  @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+  @media (max-width: 1080px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid2 { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 900px) {
+    .login { grid-template-columns: minmax(0, 1fr); }
+    .login-hero { padding: 32px max(16px, env(safe-area-inset-right, 0px)) 28px max(16px, env(safe-area-inset-left, 0px)); }
+    .login-pick { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px)); }
+    .app { grid-template-columns: minmax(0, 1fr); }
+    .side { position: fixed; inset: 0 auto 0 0; width: min(280px, 86vw); z-index: 60; transform: translateX(-100%); visibility: hidden; transition: transform .2s, visibility 0s .2s; padding-top: env(safe-area-inset-top, 0px); }
+    .side.open { transform: none; visibility: visible; transition: transform .2s; box-shadow: 0 0 40px rgba(0,0,0,.35); }
+    .scrim { position: fixed; inset: 0; background: var(--overlay); z-index: 55; }
+    .topbar { display: flex; align-items: center; gap: 10px; padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; }
+    .topbar b { color: var(--brand-text); font-weight: 800; font-size: 16px; }
+    .topbar .menu { width: 40px; height: 40px; border: 0; border-radius: 8px; background: var(--surface2); cursor: pointer; font-size: 20px; }
+    .form-grid { grid-template-columns: minmax(0, 1fr); }
+    .search { min-width: 0; max-width: none; flex: 1 1 200px; }
+    .ver dl { grid-template-columns: minmax(0, 1fr); }
+    .bar-row { grid-template-columns: 90px minmax(0, 1fr) 70px; }
+  }
+  @media (max-width: 520px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+  @media (prefers-reduced-motion: reduce) { .side { transition: none; } }
+</style>
+
+<div id="root"></div>
+<div id="modal"></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ════════════════ Catálogos (los mismos de config/ en la aplicación) ════════════════
+  var MEALS = ['desayuno', 'mediamanana', 'almuerzo', 'algo', 'merienda', 'cena', 'fraccionada'];
+  var MEAL_LABEL = { desayuno: 'Desayuno', mediamanana: 'Media mañana', almuerzo: 'Almuerzo', algo: 'Algo', merienda: 'Merienda', cena: 'Cena', fraccionada: 'Fraccionada' };
+  var SCHEDULE = { desayuno: '06:30', mediamanana: '09:30', almuerzo: '12:00', algo: '15:00', merienda: '16:30', cena: '18:00' };
+  var MEAL_COLOR = { desayuno: '#2a78d6', mediamanana: '#eb6834', almuerzo: '#1baf7a', algo: '#eda100', merienda: '#0d8fa6', cena: '#008300', fraccionada: '#6250d6' };
+  var CONS = { normal: 'Normal', blanda_mecanica: 'Blanda mecánica', liquida_clara: 'Líquida clara', liquida_completa: 'Líquida completa', supraglotica: 'Supraglótica' };
+  var SPEC = { hiposodica: 'Hiposódica', sin_gluten: 'Sin gluten', hipoglucida: 'Hipoglucida', hipograsa: 'Hipograsa', hipercalorica: 'Hipercalórica', sin_irritantes: 'Sin irritantes', sin_lacteos: 'Sin lácteos', sin_fibra: 'Sin fibra', astringente: 'Astringente' };
+  var ALL6 = ['desayuno', 'mediamanana', 'almuerzo', 'algo', 'cena', 'merienda'], MAIN3 = ['desayuno', 'almuerzo', 'cena'];
+  var BILLING = {
+    normal: ['Normal', MAIN3], blanda_mecanica: ['Blanda mecánica', MAIN3], blanda_quimica: ['Blanda química', ALL6],
+    hipoglucida: ['Hipoglúcida', ALL6], hiposodica: ['Hiposódica', MAIN3], hipograsa: ['Hipograsa', MAIN3],
+    controlada_carbohidratos: ['Controlada en carbohidratos', ALL6], hipoproteica_control_lr: ['Hipoproteica - control LR', MAIN3],
+    hiperproteica: ['Hiperproteica', ALL6], liquida_clara: ['Líquida clara', ALL6], liquida_completa: ['Líquida completa', ALL6],
+    supraglotica: ['Supraglótica', ALL6], neutropenica: ['Neutropénica', MAIN3], pediatrica_1: ['Pediátrica 1', ALL6],
+    pediatrica_2: ['Pediátrica 2', ALL6], pediatrica_3: ['Pediátrica 3', ALL6], entrecomidas: ['Entrecomidas', ['mediamanana', 'algo', 'merienda']]
+  };
+  var SERVICE_LABEL = { desayuno: 'DESAYUNO', mediamanana: 'M.MAÑANA', almuerzo: 'ALMUERZO', algo: 'ALGO', cena: 'COMIDA', merienda: 'MERIENDA' };
+  var SNACKS = ['mediamanana', 'algo', 'merienda'];
+  var ROLE = { nutricionista: 'Nutricionista', enfermeria: 'Enfermería', despachador: 'Despachador', jefe_nutricion: 'Jefe de nutrición', jefe_despacho: 'Jefe de despacho', admin: 'Administrador' };
+  var CHANGE = { creada: 'Creación', editada: 'Edición', cancelada: 'Cancelación', finalizada: 'Alta', continuada: 'Continuada', completada: 'Día completado' };
+
+  // Qué ve y qué puede hacer cada rol (equivale a los permisos de la aplicación)
+  var ACCESS = {
+    nutricionista: { views: ['activas', 'despachos', 'historial', 'reporte'], edit: true, cont: true, receive: true },
+    enfermeria: { views: ['activas'], edit: false, cont: true, receive: false },
+    despachador: { views: ['despacho', 'despachos', 'historial', 'reporte'], dispatch: true },
+    // Trabaja como nutricionista; además factura y crea nutricionistas
+    jefe_nutricion: { views: ['activas', 'despachos', 'historial', 'reporte', 'facturacion', 'usuarios'], edit: true, cont: true, receive: true, usersOnly: ['nutricionista'] },
+    // Administra sus empresas, sus precios y facturación, y los despachadores de ellas (ve los nutricionistas de solo lectura); su inicio es Empresas
+    // En esta demo los módulos Empresas y Usuarios están inactivos: aparecen en el menú sin acceso
+    jefe_despacho: { views: ['despachos', 'historial', 'reporte', 'facturacion'], off: ['empresas', 'usuarios'], usersOnly: ['despachador'], seesRoles: ['despachador', 'nutricionista'] },
+    admin: { views: ['activas', 'despachos', 'historial', 'reporte', 'facturacion', 'empresas', 'usuarios', 'auditoria'], edit: true, cont: true, receive: true }
+  };
+  var VIEWS = {
+    activas: ['Dietas activas', 'Principal', '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'],
+    despacho: ['Despacho', 'Principal', '<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/>'],
+    despachos: ['Despachos del día', 'Seguimiento', '<path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>'],
+    historial: ['Historial de cambios', 'Seguimiento', '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'],
+    reporte: ['Reporte nutricional', 'Seguimiento', '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'],
+    facturacion: ['Facturación y precios', 'Seguimiento', '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>'],
+    empresas: ['Empresas', 'Administración', '<rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/>'],
+    usuarios: ['Usuarios', 'Administración', '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/>'],
+    auditoria: ['Auditoría', 'Administración', '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>']
+  };
+
+  // ════════════════ Utilidades ════════════════
+  var KEY = 'nutritrack-demo-premium-v3', USER_KEY = 'nutritrack-demo-premium-user', CO_KEY = 'nutritrack-demo-premium-company';
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function dkey(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function today() { return dkey(new Date()); }
+  function addDays(key, n) { var p = key.split('-'); var d = new Date(+p[0], +p[1] - 1, +p[2]); d.setDate(d.getDate() + n); return dkey(d); }
+  function minsOf(hhmm) { var p = hhmm.split(':'); return +p[0] * 60 + +p[1]; }
+  function nowMins() { var d = new Date(); return d.getHours() * 60 + d.getMinutes(); }
+  function iso(dateKey, mins) { return dateKey + 'T' + pad(Math.floor(mins / 60)) + ':' + pad(mins % 60); }
+  function isoNow() { var d = new Date(); return dkey(d) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  function dateOf(isoStr) { return isoStr.slice(0, 10); }
+  function minsOfIso(isoStr) { return minsOf(isoStr.slice(11, 16)); }
+  function fmtTime(isoStr) { var m = minsOfIso(isoStr), h = Math.floor(m / 60), ap = h >= 12 ? 'p. m.' : 'a. m.'; return ((h + 11) % 12 + 1) + ':' + pad(m % 60) + ' ' + ap; }
+  function fmtDate(key) { var p = key.split('-'); var d = new Date(+p[0], +p[1] - 1, +p[2]); return d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }); }
+  function fmtDateTime(isoStr) { return fmtDate(dateOf(isoStr)) + ', ' + fmtTime(isoStr); }
+  function money(v) { return '$ ' + Math.round(v).toLocaleString('es-CO'); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function initials(name) { return name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (p) { return p[0].toUpperCase(); }).join(''); }
+  function roomSort(a, b) { return a.room.length - b.room.length || a.room.localeCompare(b.room); }
+  function nitDv(base) {
+    var w = [3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 67, 71], sum = 0;
+    base.split('').reverse().forEach(function (c, i) { sum += +c * w[i]; });
+    var r = sum % 11; return r > 1 ? 11 - r : r;
+  }
+  function nit(base) { return base + '-' + nitDv(base); }
+  function validNit(v) { var m = /^(\d{6,15})-(\d)$/.exec(v); return !!m && nitDv(m[1]) === +m[2]; }
+  function slug(t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function uniq(a) { return a.filter(function (v, i) { return a.indexOf(v) === i; }); }
+
+  // ════════════════ Datos de prueba ════════════════
+  function seed() {
+    var T = today(), nm = nowMins();
+    // Empresas atendidas por el despacho: cada una con su jefe de despacho
+    var companies = [
+      { id: 1, name: 'Clínica Central', nit: nit('900123456'), contact: 'Marta Gil', phone: '+573001234567', email: 'compras@clinicacentral.co', active: true, isDefault: true, managerId: 'u7' }
+    ];
+    // companies: 'all' = «Todas» (incluye las futuras) o lista de empresas específicas
+    var users = [
+      { id: 'u1', name: 'Camila Restrepo', email: 'camila@hospital-demo.co', role: 'nutricionista', active: true, companies: 'all' },
+      { id: 'u2', name: 'Mariana López', email: 'mariana@hospital-demo.co', role: 'despachador', active: true, companies: [1] },
+      { id: 'u7', name: 'Ricardo Méndez', email: 'ricardo@hospital-demo.co', role: 'jefe_despacho', active: true, companies: [1] }
+    ];
+    // Tres dietas registradas hoy y un despacho (desayuno) pendiente de confirmar la recepción
+    var rows = [
+      ['101', 'Ana María Gómez', ['desayuno', 'almuerzo', 'cena'], ['normal'], [], 'No', 'normal', ''],
+      ['102', 'Luis Fernando Ruiz', ['desayuno', 'mediamanana', 'almuerzo', 'algo', 'cena'], ['blanda_mecanica'], ['hiposodica'], 'No', 'blanda_quimica', 'Adulto mayor, porciones pequeñas'],
+      ['105', 'Carmen Rosa Díaz', ['desayuno', 'almuerzo', 'cena', 'merienda'], ['normal'], ['hipoglucida', 'sin_lacteos'], 'Sí', 'hipoglucida', 'Paciente diabética, controlar porciones']
+    ];
+    var diets = [], id = 1, breakfast = minsOf(SCHEDULE.desayuno);
+    rows.forEach(function (r) {
+      var d = { id: id++, companyId: 1, room: r[0], patient: r[1], status: 'active', createdAt: iso(T, breakfast - 60), closedAt: null, transfer: null, days: {}, dispatches: [], versions: [] };
+      d.versions.push({ v: 1, at: d.createdAt, by: 'Camila Restrepo', time: r[2], cons: r[3], spec: r[4], obs: r[7], iso: r[5], billing: r[6], change: 'creada', pending: false });
+      d.days[T] = { authorized: true, completedAt: null };
+      d.dispatches.push({ date: T, meal: 'desayuno', at: iso(T, breakfast - 20), by: 'Mariana López', receivedAt: null, receivedBy: null });
+      diets.push(d);
+    });
+
+    var prices = {}, base = { desayuno: 9800, mediamanana: 4200, almuerzo: 15600, algo: 4200, cena: 14900, merienda: 4200 };
+    Object.keys(BILLING).forEach(function (t, i) {
+      prices[t] = {};
+      BILLING[t][1].forEach(function (s) { prices[t][s] = Math.round(base[s] * (1 + (i % 5) * 0.06) / 100) * 100; });
+    });
+    var start = new Date(), end = new Date(start); end.setMonth(end.getMonth() + 1);
+    var plan = { name: 'Premium mensual', gift: true, startsAt: dkey(start), endsAt: dkey(end) };
+    return { rev: 1, plan: plan, companies: companies, nextCompanyId: 2, users: users, diets: diets, prices: prices, nextId: id, audit: [{ at: isoNow(), who: 'Sistema', co: null, what: 'Se cargaron los datos de demostración' }] };
+  }
+
+  // ════════════════ Estado ════════════════
+  var S, user = null, view = null, ui = { tab: 'active', q: '', service: null, showAll: true, histId: null, month: today().slice(0, 7), dlService: '', dlState: '', sel: {}, rsel: {}, menu: false };
+  function load() { try { var raw = localStorage.getItem(KEY); if (raw) return JSON.parse(raw); } catch (e) {} return null; }
+  function save(msg) {
+    S.rev++;
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+    if (msg) audit(msg);
+  }
+  function audit(what) { S.audit.unshift({ at: isoNow(), who: user ? user.name : 'Sistema', co: user ? coId : null, what: what }); S.audit = S.audit.slice(0, 200); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  S = load() || seed();
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  try { var uid = sessionStorage.getItem(USER_KEY); if (uid) user = S.users.find(function (u) { return u.id === uid && u.active; }) || null; } catch (e) {}
+
+  // ════════════════ Empresa activa y aislamiento (CurrentCompany + CompanyScope) ════════════════
+  var coId = null;
+  try { coId = +sessionStorage.getItem(CO_KEY) || null; } catch (e) {}
+  function coById(id) { return S.companies.find(function (c) { return c.id === +id; }); }
+  function hasAll(u) { return u.role === 'admin' || u.companies === 'all'; }
+  // Empresas que el usuario puede elegir: asignadas y activas (el admin, todas)
+  function userCos(u) { return S.companies.filter(function (c) { return c.active && (hasAll(u) || u.companies.indexOf(c.id) >= 0); }); }
+  // Empresas que administra: el admin todas, el jefe de despacho las suyas
+  function managedCos() { return user.role === 'admin' ? S.companies : S.companies.filter(function (c) { return c.managerId === user.id; }); }
+  function resolveCo() {
+    var list = userCos(user);
+    if (!list.length) { coId = 0; return; }
+    if (!list.some(function (c) { return c.id === coId; })) {
+      coId = (list.find(function (c) { return c.isDefault; }) || list[0]).id;
+      try { sessionStorage.setItem(CO_KEY, coId); } catch (e) {}
+    }
+  }
+  // Toda consulta de dietas queda en la empresa activa
+  function D() { return S.diets.filter(function (d) { return d.companyId === coId; }); }
+
+  // ════════════════ Reglas de negocio (equivalentes a los servicios) ════════════════
+  function cur(d) { return d.versions[d.versions.length - 1]; }
+  function confirmed(d) { for (var i = d.versions.length - 1; i >= 0; i--) if (!d.versions[i].pending) return d.versions[i]; return d.versions[0]; }
+  function pendingOf(d) { return d.versions.some(function (v) { return v.pending; }); }
+  function byId(id) { return D().find(function (d) { return d.id === +id; }); }
+  function addVersion(d, patch, change, pending) {
+    var c = cur(d);
+    d.versions.push(Object.assign({}, c, patch, { v: c.v + 1, at: isoNow(), by: user.name, change: change, pending: pending }));
+  }
+  // Despachos anulados (error de cocina) o que no llegaron: salen de d.dispatches y quedan en d.voided
+  function missingToday(d, meal) { return (d.voided || []).filter(function (x) { return x.date === today() && x.meal === meal && x.voidKind === 'missing'; }).pop(); }
+  function dispatchOf(d, date, meal) { return d.dispatches.find(function (x) { return x.date === date && x.meal === meal; }); }
+  function transferToday(d) { return d.status === 'finished' && d.transfer && d.transfer.date === today(); }
+  function blockReason(d, meal) {
+    var T = today();
+    if (transferToday(d)) {
+      if (d.transfer.meals.indexOf(meal) < 0) return 'Alta: solo se envían ' + d.transfer.meals.map(function (m) { return MEAL_LABEL[m]; }).join(', ');
+    } else if (d.status !== 'active') return 'Dieta cerrada';
+    if (pendingOf(d)) return 'Tiene cambios sin confirmar';
+    if (cur(d).time.indexOf(meal) < 0) return 'No incluye ' + MEAL_LABEL[meal];
+    if (dispatchOf(d, T, meal)) return 'Ya despachada';
+    if (!transferToday(d) && !(d.days[T] && d.days[T].authorized)) return 'Sin autorización del día (falta «Continuar»)';
+    return null;
+  }
+  function requiredMeals(d, date) {
+    var meals = cur(d).time.slice();
+    if (dateOf(d.createdAt) === date) {
+      var cm = minsOfIso(d.createdAt);
+      meals = meals.filter(function (m) { return !SCHEDULE[m] || minsOf(SCHEDULE[m]) >= cm; });
+    }
+    return meals;
+  }
+  function evaluateDay(d, date) {
+    if (d.status !== 'active' || !d.days[date] || d.days[date].completedAt) return;
+    var req = requiredMeals(d, date);
+    if (!req.length) return;
+    var all = req.every(function (m) { var x = dispatchOf(d, date, m); return x && x.receivedAt; });
+    if (all) { d.days[date].completedAt = isoNow(); addVersion(d, {}, 'completada', false); }
+  }
+  function dayState(d) {
+    var T = today(), day = d.days[T];
+    if (!day || !day.authorized) return ['Sin autorizar', 'chip-warn'];
+    if (day.completedAt) return ['Completado', 'chip-ok'];
+    return ['En curso', 'chip-muted'];
+  }
+  function defaultService() {
+    var nm = nowMins(), pick = 'desayuno';
+    ['desayuno', 'mediamanana', 'almuerzo', 'algo', 'merienda', 'cena'].forEach(function (m) { if (minsOf(SCHEDULE[m]) <= nm) pick = m; });
+    return pick;
+  }
+  function activeDiets() { return D().filter(function (d) { return d.status === 'active'; }); }
+
+  // Bandejas que cuentan por día (regla del alta: el día del alta solo los tiempos con hora ≤ hora del alta)
+  function mealsCounted(d, date) {
+    var created = dateOf(d.createdAt);
+    if (date < created) return [];
+    var closeDate = d.closedAt ? dateOf(d.closedAt) : null;
+    if (closeDate && date > closeDate) return [];
+    var v = d.versions.filter(function (x) { return dateOf(x.at) <= date && x.change !== 'cancelada' && x.change !== 'finalizada'; }).pop() || d.versions[0];
+    var meals = v.time.slice();
+    if (date === created) { var cm = minsOfIso(d.createdAt); meals = meals.filter(function (m) { return !SCHEDULE[m] || minsOf(SCHEDULE[m]) >= cm; }); }
+    if (closeDate === date) {
+      if (d.status === 'cancelled') return [];
+      var am = minsOfIso(d.closedAt);
+      meals = meals.filter(function (m) { return SCHEDULE[m] && minsOf(SCHEDULE[m]) <= am; });
+    }
+    return meals.map(function (m) { return { meal: m, billing: v.billing }; });
+  }
+  function monthDays(month) {
+    var p = month.split('-'), last = new Date(+p[0], +p[1], 0).getDate(), out = [], T = today();
+    for (var i = 1; i <= last; i++) { var k = month + '-' + pad(i); if (k <= T) out.push(k); }
+    return out;
+  }
+
+  // ════════════════ Render ════════════════
+  var root = document.getElementById('root');
+  function render() {
+    if (!user) { root.innerHTML = demoBar() + loginView(); return; }
+    var acc = ACCESS[user.role];
+    resolveCo();
+    if (!view || acc.views.indexOf(view) < 0) view = acc.home || acc.views[0];
+    if (!ui.service) ui.service = defaultService();
+    // El despachador sin empresas activas no puede usar la plataforma (EnsureCompanyAssigned)
+    if (!coId && user.role === 'despachador') { root.innerHTML = demoBar() + shell(noCompany()); return; }
+    root.innerHTML = demoBar() + shell(coBar() + viewHtml());
+  }
+  function demoBar() {
+    return '<div class="demo-bar">Demostración con datos ficticios. Los cambios se guardan solo en este navegador. <button type="button" data-a="reset">Reiniciar demo</button></div>';
+  }
+  function loginView() {
+    var cards = S.users.filter(function (u) { return u.active; }).map(function (u) {
+      return '<button type="button" data-a="login" data-id="' + u.id + '"><span class="av">' + initials(u.name) + '</span><span><b>' + esc(u.name) + '</b><small>' + ROLE[u.role] + '</small></span></button>';
+    }).join('');
+    return '<div class="login"><div class="login-hero"><div class="logo">NutriTrack</div>' +
+      '<h1>Control de las dietas hospitalarias, en tiempo real.</h1>' +
+      '<p>Desde la prescripción nutricional hasta la entrega al paciente: el nutricionista actualiza la dieta, la cocina recibe el cambio al instante y cada servicio queda despachado, recibido y listo para facturar.</p>' +
+      '<ul><li>Dietas por habitación con historial de versiones.</li><li>Despacho por tiempo de comida y confirmación de recepción.</li><li>Reporte nutricional y facturación del mes.</li></ul>' +
+      (S.plan ? '<div class="plan plan-hero"><b>★ Plan ' + esc(S.plan.name) + ' de regalo</b><small>Todas las funciones Premium activas hasta el ' + fmtDate(S.plan.endsAt) + ': facturación y precios, despachos del día e historial de cambios.</small></div>' : '') + '</div>' +
+      '<div class="login-pick"><h2>Entrar a la demo</h2><p>Elige un usuario de prueba. Cada rol ve su propio menú y sus propias acciones.</p><div class="who">' + cards + '</div>' +
+      '<div class="tip"><b>Para probar el tiempo real:</b> abre esta página en otra pestaña, entra con otro rol (por ejemplo, nutricionista en una y despachador en la otra) y haz un cambio. La otra pestaña se actualiza sola.</div></div></div>';
+  }
+  function shell(content) {
+    var acc = ACCESS[user.role], sec = '', nav = '';
+    var pend = D().filter(pendingOf).length;
+    var toReceive = D().reduce(function (n, d) { return n + d.dispatches.filter(function (x) { return !x.receivedAt; }).length; }, 0);
+    acc.views.forEach(function (v) {
+      var meta = VIEWS[v];
+      if (meta[1] !== sec) { sec = meta[1]; nav += '<div class="nav-sec">' + sec + '</div>'; }
+      var count = (v === 'despacho' && pend) ? '<span class="count">' + pend + '</span>' : (v === 'activas' && acc.receive && toReceive) ? '<span class="count" title="Despachos por recibir">' + toReceive + '</span>' : '';
+      nav += '<a href="#' + v + '" data-a="go" data-v="' + v + '"' + (v === view ? ' aria-current="page"' : '') + '><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">' + meta[2] + '</svg>' + meta[0] + count + '</a>';
+    });
+    (acc.off || []).forEach(function (v) {
+      var meta = VIEWS[v];
+      if (meta[1] !== sec) { sec = meta[1]; nav += '<div class="nav-sec">' + sec + '</div>'; }
+      nav += '<span class="nav-off" aria-disabled="true" title="Módulo inactivo en esta demo"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">' + meta[2] + '</svg>' + meta[0] + '<span class="count">Inactivo</span></span>';
+    });
+    return '<div class="topbar"><button type="button" class="menu" data-a="menu" aria-label="Abrir menú" aria-expanded="' + ui.menu + '">☰</button><b>NutriTrack</b></div>' +
+      (ui.menu ? '<div class="scrim" data-a="menu"></div>' : '') +
+      '<div class="app"><aside class="side' + (ui.menu ? ' open' : '') + '" aria-label="Menú principal"><div class="side-logo"><b>NutriTrack</b><small>Gestión de Dietas Hospitalarias</small></div>' +
+      '<nav class="nav">' + nav + '</nav><div class="side-foot">' + planBadge() + '<div class="me"><span class="av">' + initials(user.name) + '</span><span><b>' + esc(user.name) + '</b><small>' + ROLE[user.role] + '</small></span></div>' +
+      '<button type="button" class="btn btn-light-outline" data-a="logout">Cambiar de usuario</button></div></aside>' +
+      '<main class="work"><div class="work-in">' + content + '</div></main></div>';
+  }
+  // Plan Premium mensual de regalo para el operador del despacho
+  function planBadge() {
+    var p = S.plan;
+    if (!p) return '';
+    return '<div class="plan"><b>★ ' + esc(p.name) + '</b><small>' + (p.gift ? 'De regalo · ' : '') + 'vigente hasta el ' + fmtDate(p.endsAt) + '</small></div>';
+  }
+  function viewHtml() {
+    return ({ activas: vActivas, despacho: vDespacho, despachos: vDespachos, historial: vHistorial, reporte: vReporte, facturacion: vFacturacion, empresas: vEmpresas, usuarios: vUsuarios, auditoria: vAuditoria })[view]();
+  }
+  // Selector de empresa arriba de cada página (x-company-switcher)
+  // Empresas inactivas en esta demo: sin selector de empresa
+  function coBar() {
+    return '';
+    var list = userCos(user), c = coById(coId);
+    if (!c) return '<div class="cobar"><span class="lbl">Empresa</span><span class="muted">Aún no tienes empresas. Crea la primera en Empresas.</span></div>';
+    if (list.length === 1) return '<div class="cobar"><span class="lbl">Empresa</span><b>' + esc(c.name) + '</b></div>';
+    return '<form class="cobar" id="coSwitch"><label class="lbl" for="co-sel">Empresa</label><select class="input" id="co-sel">' +
+      list.map(function (x) { return '<option value="' + x.id + '"' + (x.id === coId ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') +
+      '</select><button type="submit" class="btn btn-outline-primary btn-sm">Cambiar empresa</button><span class="small muted">Solo ves las dietas, despachos y reportes de esta empresa.</span></form>';
+  }
+  function noCompany() {
+    return '<div class="card card-pad" style="text-align:center;padding:48px 18px;display:grid;gap:8px;justify-items:center"><span class="tag chip-err">403</span><h1 style="font-size:22px">Sin empresa asignada</h1><p class="muted" style="margin:0;max-width:440px">Tu usuario no tiene empresas activas. Pide a tu jefe de despacho que te asigne una.</p></div>';
+  }
+  function tagsHtml(list, cls, labels) { return list.length ? '<div class="tags">' + list.map(function (k) { return '<span class="tag ' + cls + '">' + esc(labels[k] || k) + '</span>'; }).join('') + '</div>' : '<span class="muted">—</span>'; }
+  function mealTags(d) {
+    var T = today();
+    return '<div class="tags">' + MEALS.filter(function (m) { return cur(d).time.indexOf(m) >= 0; }).map(function (m) {
+      var x = dispatchOf(d, T, m);
+      if (x && x.receivedAt) return '<span class="tag tag-recv" title="Entregado y recibido hoy">✓ ' + MEAL_LABEL[m] + '</span>';
+      if (x) return '<span class="tag tag-sent" title="Despachado, falta confirmar la recepción">🚚 ' + MEAL_LABEL[m] + '</span>';
+      return '<span class="tag tag-time">' + MEAL_LABEL[m] + '</span>';
+    }).join('') + '</div>';
+  }
+  function legend() { return '<div class="legend">Tiempo de hoy: <span class="tag tag-recv">✓ Entregado</span><span class="tag tag-sent">🚚 Despachado, sin recibir</span><span class="tag tag-time">Pendiente</span></div>'; }
+
+  // ── Dietas activas (nutricionista, enfermería, admin) ──
+  function vActivas() {
+    var acc = ACCESS[user.role], act = activeDiets();
+    var cancelled = D().filter(function (d) { return d.status === 'cancelled'; }), finished = D().filter(function (d) { return d.status === 'finished'; });
+    var kp = '<div class="kpis">' +
+      kpi('Dietas activas', act.length, 'Pacientes en seguimiento', 'k-brand') +
+      kpi('Canceladas', cancelled.length, finished.length + ' finalizadas por alta', 'k-err') +
+      kpi('En aislamiento', act.filter(function (d) { return cur(d).iso === 'Sí'; }).length, 'Con protocolo especial', 'k-warn') +
+      kpi('Con cambios', act.filter(function (d) { return d.versions.length > 1 && d.versions.some(function (v) { return v.change === 'editada'; }); }).length, 'Dietas modificadas desde su registro', 'k-brand') + '</div>';
+    var receipts = acc.receive ? receiptsPanel() : '';
+    var list = ui.tab === 'active' ? act : ui.tab === 'cancelled' ? cancelled : finished;
+    var q = ui.q.trim().toLowerCase();
+    if (q) list = list.filter(function (d) { return d.room.indexOf(q) >= 0 || d.patient.toLowerCase().indexOf(q) >= 0; });
+    list = list.slice().sort(roomSort);
+    var rows = list.map(function (d) {
+      var c = cur(d), st = dayState(d), T = today(), tomorrow = addDays(T, 1);
+      var dayCell = d.status === 'active' ? '<div class="tags" style="flex-direction:column;align-items:flex-start;gap:6px"><span class="tag ' + st[1] + '">' + st[0] + '</span>' +
+        (acc.cont ? (d.days[tomorrow] ? '<span class="tag chip-ok">Continúa mañana</span>' : '<button type="button" class="btn btn-outline-primary btn-sm" data-a="continue" data-id="' + d.id + '">→ Continuar</button>') : '') + '</div>'
+        : '<span class="small muted">' + (d.status === 'cancelled' ? 'Cancelada ' : 'Alta ') + fmtDateTime(d.closedAt) + '</span>';
+      var actions = '';
+      if (d.status === 'active' && acc.edit) {
+        actions = '<button type="button" class="btn btn-success btn-sm" data-a="edit" data-id="' + d.id + '" title="Editar dieta">Editar</button>' +
+          '<button type="button" class="btn btn-info btn-sm" data-a="close" data-kind="finish" data-id="' + d.id + '" title="Dar de alta">Alta</button>' +
+          '<button type="button" class="btn btn-danger btn-sm" data-a="close" data-kind="cancel" data-id="' + d.id + '" title="Cancelar dieta">Cancelar</button>';
+      }
+      if (ACCESS[user.role].views.indexOf('historial') >= 0) actions += '<button type="button" class="btn btn-ghost btn-sm" data-a="hist" data-id="' + d.id + '">Historial</button>';
+      return '<tr><td><span class="room">' + esc(d.room) + '</span></td><td><b>' + esc(d.patient) + '</b>' + (c.obs ? '<div class="small muted">' + esc(c.obs) + '</div>' : '') + '</td><td>' + dayCell + '</td><td>' + mealTags(d) + '</td><td>' + tagsHtml(c.cons, 'tag-cons', CONS) + '</td><td>' + tagsHtml(c.spec, 'tag-spec', SPEC) + '</td><td>' + (c.iso === 'Sí' ? '<b style="color:var(--err)">Sí</b>' : 'No') + '</td><td class="actions">' + (actions ? '<div class="acts">' + actions + '</div>' : '<span class="muted small">Solo lectura</span>') + '</td></tr>';
+    }).join('') || '<tr><td colspan="8" class="empty">' + (q ? 'No hay dietas que coincidan con «' + esc(ui.q) + '».' : 'No hay dietas en esta pestaña.') + '</td></tr>';
+    return '<div class="head"><div><h1>Dietas activas</h1><p>' + (acc.edit ? 'Registra, edita y cierra las dietas de cada habitación.' : 'Consulta las dietas y autoriza el día siguiente.') + '</p></div><div class="actions">' + (acc.edit ? '<button type="button" class="btn btn-primary" data-a="create">+ Registrar dieta</button>' : '') + '</div></div>' +
+      kp + receipts +
+      '<div class="card"><div class="toolbar"><div class="tabs" role="tablist">' +
+      tab('active', 'Activas', act.length) + tab('cancelled', 'Canceladas', cancelled.length) + tab('finished', 'Finalizadas', finished.length) +
+      '</div><input class="input search" id="q" type="search" placeholder="Buscar habitación o paciente" value="' + esc(ui.q) + '" data-a="search" aria-label="Buscar"></div>' +
+      '<div style="padding:10px 16px 0">' + legend() + '</div>' +
+      '<div class="twrap"><table><thead><tr><th>Hab.</th><th>Paciente</th><th>Día</th><th>Tiempo</th><th>Consistencia</th><th>Especificaciones</th><th>Aislam.</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+  function kpi(label, n, sub, cls) { return '<div class="card kpi ' + cls + '"><span>' + label + '</span><b>' + n + '</b><small>' + sub + '</small></div>'; }
+  function tab(k, label, n) { return '<button type="button" class="tab" role="tab" aria-selected="' + (ui.tab === k) + '" data-a="tab" data-k="' + k + '">' + label + ' (' + n + ')</button>'; }
+  function receiptsPanel() {
+    var items = [];
+    D().forEach(function (d) { d.dispatches.forEach(function (x, i) { if (!x.receivedAt) items.push({ d: d, x: x, i: i }); }); });
+    if (!items.length) return '<div class="panel"><h3>✓ No hay despachos por recibir</h3></div>';
+    items.sort(function (a, b) { return a.x.at < b.x.at ? -1 : 1; });
+    var n = Object.keys(ui.rsel).filter(function (k) { return ui.rsel[k]; }).length;
+    return '<div class="panel"><h3>🚚 ' + items.length + (items.length === 1 ? ' despacho por recibir' : ' despachos por recibir') + '<span style="margin-left:auto"><button type="button" class="btn btn-primary btn-sm" data-a="receive"' + (n ? '' : ' disabled') + '>Confirmar recepción (' + n + ')</button></span></h3><div class="panel-list">' +
+      items.map(function (it) {
+        var k = it.d.id + ':' + it.i;
+        return '<label class="panel-item"><input type="checkbox" data-a="rsel" data-k="' + k + '"' + (ui.rsel[k] ? ' checked' : '') + ' style="width:17px;height:17px;accent-color:var(--b-primary)"><span class="room">' + esc(it.d.room) + '</span><span class="grow">' + esc(it.d.patient) + '</span><span class="tag tag-time">' + MEAL_LABEL[it.x.meal] + '</span><span class="small muted">' + fmtTime(it.x.at) + '</span>' +
+          '<button type="button" class="btn btn-ghost btn-sm" data-a="voidDispatch" data-kind="missing" data-id="' + it.d.id + '" data-i="' + it.i + '">✗ No llegó</button></label>';
+      }).join('') + '</div></div>';
+  }
+
+  // ── Despacho (cocina) ──
+  function vDespacho() {
+    var svc = ui.service, list = D().filter(function (d) { return d.status === 'active' || transferToday(d); });
+    var pend = D().filter(pendingOf).sort(roomSort);
+    if (!ui.showAll) list = list.filter(function (d) { return pendingOf(d) || cur(d).time.indexOf(svc) >= 0; });
+    list = list.slice().sort(function (a, b) { return (pendingOf(b) - pendingOf(a)) || roomSort(a, b); });
+    var nsel = Object.keys(ui.sel).filter(function (k) { return ui.sel[k] && !blockReason(byId(k), svc); }).length;
+    var banner = pend.length ? '<div class="panel" style="border-left-color:var(--warn)"><h3>⚠ ' + pend.length + (pend.length === 1 ? ' dieta cambió' : ' dietas cambiaron') + ' <span class="small muted" style="font-weight:500">Revisa y confirma antes de entregar.</span><span style="margin-left:auto"><button type="button" class="btn btn-warning btn-sm" data-a="confirmAll">Confirmar todos</button></span></h3><div class="panel-list">' +
+      pend.map(function (d) { var v = cur(d); return '<div class="panel-item"><span class="room">' + esc(d.room) + '</span><span class="grow">' + esc(d.patient) + '</span><span class="tag chip-muted">' + (v.change === 'cancelada' ? 'Cancelada' : v.change === 'finalizada' ? 'Alta' : 'Con cambios') + '</span><span class="small muted">' + fmtTime(v.at) + '</span><button type="button" class="btn btn-primary btn-sm" data-a="confirm" data-id="' + d.id + '">✓ Confirmar</button></div>'; }).join('') + '</div></div>' : '';
+    var opts = ['desayuno', 'mediamanana', 'almuerzo', 'algo', 'merienda', 'cena', 'fraccionada'].map(function (m) { return '<option value="' + m + '"' + (m === svc ? ' selected' : '') + '>' + MEAL_LABEL[m] + (SCHEDULE[m] ? ' · ' + SCHEDULE[m] : '') + '</option>'; }).join('');
+    var rows = list.map(function (d) {
+      var p = pendingOf(d), c = cur(d), base = confirmed(d), br = blockReason(d, svc), x = dispatchOf(d, today(), svc);
+      var state = p ? '<div style="display:grid;gap:6px"><span class="small" style="color:var(--warn);font-weight:700">Cambio sin confirmar</span><button type="button" class="btn btn-warning btn-sm" data-a="confirm" data-id="' + d.id + '">✓ Confirmar</button></div>'
+        : x ? '<div style="display:grid;gap:6px;justify-items:start"><span class="tag ' + (x.receivedAt ? 'tag-recv' : 'tag-sent') + '">' + (x.receivedAt ? '✓ Recibido' : '🚚 Despachado ' + fmtTime(x.at)) + '</span>' +
+            (x.receivedAt ? '' : '<button type="button" class="btn btn-outline-danger btn-sm" data-a="voidDispatch" data-kind="error" data-id="' + d.id + '" data-i="' + d.dispatches.indexOf(x) + '">Anular despacho</button>') + '</div>'
+        : missingToday(d, svc) ? '<span class="tag chip-warn" title="' + esc(missingToday(d, svc).voidReason || '') + '">⚠ No llegó: volver a despachar</span>'
+        : transferToday(d) ? '<span class="tag chip-warn">Alta: enviar a ' + esc(d.transfer.dest) + '</span>' : '<span class="small muted">' + (br || 'Lista para despachar') + '</span>';
+      var check = '<input type="checkbox" data-a="sel" data-id="' + d.id + '"' + (ui.sel[d.id] && !br ? ' checked' : '') + (br ? ' disabled title="' + esc(br) + '"' : '') + ' aria-label="Seleccionar habitación ' + esc(d.room) + '" style="width:18px;height:18px;accent-color:var(--b-primary)">';
+      return '<tr' + (p ? ' class="pending"' : '') + '><td>' + check + '</td><td>' + state + '</td><td><span class="room">' + esc(d.room) + '</span></td><td><b>' + esc(d.patient) + '</b></td>' +
+        '<td>' + (p ? diffCell(base.time, c.time, MEAL_LABEL, 'tag-time') : mealTags(d)) + '</td><td>' + (p ? diffCell(base.cons, c.cons, CONS, 'tag-cons') : tagsHtml(c.cons, 'tag-cons', CONS)) + '</td><td>' + (p ? diffCell(base.spec, c.spec, SPEC, 'tag-spec') : tagsHtml(c.spec, 'tag-spec', SPEC)) + '</td>' +
+        '<td>' + esc(c.obs || '—') + (p && base.obs !== c.obs ? '<div class="small" style="color:var(--err);text-decoration:line-through">' + esc(base.obs || '—') + '</div>' : '') + '</td><td>' + (p && base.iso !== c.iso ? '<div class="diffbox"><b style="color:var(--err)">' + c.iso + '</b><div class="small" style="text-decoration:line-through">' + base.iso + '</div></div>' : c.iso) + '</td></tr>';
+    }).join('') || '<tr><td colspan="9" class="empty">No hay dietas para este servicio.</td></tr>';
+    return '<div class="head"><div><h1>Despacho de dietas</h1><p>Confirma los cambios, marca las dietas listas y despacha el servicio.</p></div></div>' + banner +
+      '<div class="card"><div class="dispatchbar"><div class="field"><label for="svc">Servicio a despachar</label><select class="input" id="svc" data-a="service">' + opts + '</select></div>' +
+      '<label class="check"><input type="checkbox" data-a="showAll"' + (ui.showAll ? ' checked' : '') + '> Mostrar todas las activas</label>' +
+      '<button type="button" class="btn btn-success" data-a="dispatch"' + (nsel ? '' : ' disabled') + '>🚚 Despachar seleccionadas (' + nsel + ')</button>' +
+      '<span class="small muted" style="flex:1 1 220px">El nutricionista confirma la recepción; solo lo recibido se factura.</span></div>' +
+      '<div style="padding:10px 16px 0">' + legend() + '</div>' +
+      '<div class="twrap"><table><thead><tr><th><input type="checkbox" data-a="selAll" aria-label="Seleccionar todas" style="width:18px;height:18px;accent-color:var(--b-primary)"></th><th>Estado</th><th>Hab.</th><th>Paciente</th><th>Tiempo</th><th>Consistencia</th><th>Especificaciones</th><th>Observaciones</th><th>Aislam.</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+  function diffCell(before, after, labels, cls) {
+    var added = after.filter(function (k) { return before.indexOf(k) < 0; }), removed = before.filter(function (k) { return after.indexOf(k) < 0; });
+    var html = '<div class="tags">' + after.map(function (k) { return added.indexOf(k) >= 0 ? '<span class="tag tag-add">+ ' + esc(labels[k] || k) + '</span>' : '<span class="tag ' + cls + '">' + esc(labels[k] || k) + '</span>'; }).join('') +
+      removed.map(function (k) { return '<span class="tag tag-del">' + esc(labels[k] || k) + '</span>'; }).join('') + '</div>';
+    if (!after.length && !removed.length) html = '<span class="muted">—</span>';
+    return (added.length || removed.length) ? '<div class="diffbox">' + html + '</div>' : html;
+  }
+
+  // ── Despachos del día ──
+  function vDespachos() {
+    var T = today(), rows = [];
+    D().forEach(function (d) { d.dispatches.forEach(function (x) { if (x.date === T) rows.push({ d: d, x: x }); }); });
+    var summary = ['desayuno', 'mediamanana', 'almuerzo', 'algo', 'merienda', 'cena', 'fraccionada'].map(function (m) {
+      var r = rows.filter(function (it) { return it.x.meal === m; }), ok = r.filter(function (it) { return it.x.receivedAt; }).length;
+      var prog = D().filter(function (d) { return (d.status === 'active' || transferToday(d)) && cur(d).time.indexOf(m) >= 0; }).length;
+      return '<div class="card card-pad" style="display:grid;gap:6px"><span class="lbl">' + MEAL_LABEL[m] + (SCHEDULE[m] ? ' · ' + SCHEDULE[m] : '') + '</span><b class="num" style="font-size:20px">' + r.length + ' <span class="small muted" style="font-weight:500">de ' + prog + ' despachados</span></b><span class="small" style="color:var(--t-deliv);font-weight:700">' + ok + ' recibidos</span>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + (prog ? Math.round(ok / prog * 100) : 0) + '%;background:var(--t-deliv)"></div></div></div>';
+    }).join('');
+    D().forEach(function (d) { (d.voided || []).forEach(function (x) { if (x.date === T) rows.push({ d: d, x: x }); }); });
+    if (ui.dlService) rows = rows.filter(function (it) { return it.x.meal === ui.dlService; });
+    if (ui.dlState) rows = rows.filter(function (it) { return ui.dlState === 'voided' ? it.x.voidedAt : !it.x.voidedAt && (ui.dlState === 'received' ? it.x.receivedAt : !it.x.receivedAt); });
+    rows.sort(function (a, b) { return roomSort(a.d, b.d) || MEALS.indexOf(a.x.meal) - MEALS.indexOf(b.x.meal); });
+    var body = rows.map(function (it) {
+      return '<tr><td><span class="room">' + esc(it.d.room) + '</span></td><td>' + esc(it.d.patient) + '</td><td><span class="tag tag-time">' + MEAL_LABEL[it.x.meal] + '</span></td><td class="num">' + fmtTime(it.x.at) + '<div class="small muted">' + esc(it.x.by) + '</div></td><td>' + (it.x.voidedAt ? '<span class="tag chip-err">' + (it.x.voidKind === 'missing' ? '✗ No llegó' : '✗ Anulado por cocina') + ' ' + fmtTime(it.x.voidedAt) + '</span><div class="small muted">' + esc(it.x.voidedBy) + (it.x.voidReason ? ' · ' + esc(it.x.voidReason) : '') + '</div>' : it.x.receivedAt ? '<span class="tag tag-recv">✓ Recibido ' + fmtTime(it.x.receivedAt) + '</span><div class="small muted">' + esc(it.x.receivedBy) + '</div>' : '<span class="tag tag-sent">🚚 Sin recibir</span>') + '</td></tr>';
+    }).join('') || '<tr><td colspan="5" class="empty">No hay despachos con estos filtros.</td></tr>';
+    return '<div class="head"><div><h1>Despachos del día</h1><p>Lo que salió de cocina hoy y lo que ya recibió nutrición.</p></div></div>' +
+      '<div class="kpis" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr))">' + summary + '</div>' +
+      '<div class="card"><div class="toolbar"><div class="tabs"><select class="input" data-a="dlService" aria-label="Servicio"><option value="">Todos los servicios</option>' + MEALS.map(function (m) { return '<option value="' + m + '"' + (ui.dlService === m ? ' selected' : '') + '>' + MEAL_LABEL[m] + '</option>'; }).join('') + '</select>' +
+      '<select class="input" data-a="dlState" aria-label="Estado"><option value="">Todos los estados</option><option value="pending"' + (ui.dlState === 'pending' ? ' selected' : '') + '>Sin recibir</option><option value="received"' + (ui.dlState === 'received' ? ' selected' : '') + '>Recibidos</option><option value="voided"' + (ui.dlState === 'voided' ? ' selected' : '') + '>Anulados o no llegaron</option></select></div><span class="small muted">' + fmtDate(T) + '</span></div>' +
+      '<div class="twrap"><table><thead><tr><th>Hab.</th><th>Paciente</th><th>Tiempo</th><th>Despachado</th><th>Recepción</th></tr></thead><tbody>' + body + '</tbody></table></div></div>';
+  }
+
+  // ── Historial ──
+  function vHistorial() {
+    var all = D().slice().sort(roomSort);
+    if (!ui.histId || !byId(ui.histId)) ui.histId = all[0] && all[0].id;
+    var d = byId(ui.histId);
+    if (!d) return '<div class="head"><div><h1>Historial de cambios</h1><p>Cada versión de la dieta: quién la cambió, cuándo y qué cambió.</p></div></div><div class="card"><p class="empty">Todavía no hay dietas.</p></div>';
+    var opts = all.map(function (x) { return '<option value="' + x.id + '"' + (x.id === d.id ? ' selected' : '') + '>Hab. ' + esc(x.room) + ' · ' + esc(x.patient) + (x.status !== 'active' ? ' (' + (x.status === 'cancelled' ? 'cancelada' : 'alta') + ')' : '') + '</option>'; }).join('');
+    var vers = d.versions.slice().reverse().map(function (v, i, arr) {
+      var prev = arr[i + 1];
+      var cls = v.change === 'creada' ? 'chip-brand' : v.change === 'editada' ? 'chip-warn' : v.change === 'cancelada' ? 'chip-err' : v.change === 'finalizada' ? 'chip-err' : 'chip-ok';
+      var dl = '<dl>' + histRow('Tiempos', v.time, prev && prev.time, MEAL_LABEL, 'tag-time') + histRow('Consistencia', v.cons, prev && prev.cons, CONS, 'tag-cons') + histRow('Especificaciones', v.spec, prev && prev.spec, SPEC, 'tag-spec') +
+        histSimple('Aislamiento', v.iso, prev && prev.iso) + histSimple('Observaciones', v.obs || '—', prev && (prev.obs || '—')) + histSimple('Tipo de facturación', BILLING[v.billing][0], prev && BILLING[prev.billing][0]) + '</dl>';
+      return '<div class="ver"><div class="ver-h"><b>Versión ' + v.v + '</b><span class="tag ' + cls + '">' + CHANGE[v.change] + '</span>' + (v.pending ? '<span class="tag chip-warn">Sin confirmar en cocina</span>' : '') + '<span class="small muted" style="margin-left:auto">' + fmtDateTime(v.at) + ' · ' + esc(v.by) + '</span></div>' + dl + '</div>';
+    }).join('');
+    return '<div class="head"><div><h1>Historial de cambios</h1><p>Cada versión de la dieta: quién la cambió, cuándo y qué cambió.</p></div></div>' +
+      '<div class="card card-pad" style="display:grid;gap:14px"><div class="field" style="max-width:460px"><label for="hsel">Dieta</label><select class="input" id="hsel" data-a="histSel">' + opts + '</select></div>' +
+      '<div class="legend"><span class="tag tag-add">+ Agregado</span><span class="tag tag-del">Quitado</span><span class="tag tag-time">Se mantiene</span></div><div class="timeline">' + vers + '</div></div>';
+  }
+  function histRow(label, now, before, labels, cls) {
+    var body;
+    if (!before) body = tagsHtml(now, cls, labels);
+    else {
+      var added = now.filter(function (k) { return before.indexOf(k) < 0; }), removed = before.filter(function (k) { return now.indexOf(k) < 0; });
+      body = '<div class="tags">' + now.map(function (k) { return '<span class="tag ' + (added.indexOf(k) >= 0 ? 'tag-add">+ ' : cls + '">') + esc(labels[k]) + '</span>'; }).join('') + removed.map(function (k) { return '<span class="tag tag-del">' + esc(labels[k]) + '</span>'; }).join('') + '</div>';
+      if (!now.length && !removed.length) body = '<span class="muted">—</span>';
+    }
+    return '<dt>' + label + '</dt><dd>' + body + '</dd>';
+  }
+  function histSimple(label, now, before) {
+    return '<dt>' + label + '</dt><dd>' + esc(now) + (before != null && before !== now ? ' <span class="small" style="color:var(--err);text-decoration:line-through">' + esc(before) + '</span>' : '') + '</dd>';
+  }
+
+  // ── Reporte nutricional ──
+  function monthOptions() {
+    var out = [], d = new Date();
+    for (var i = 0; i < 6; i++) { var m = new Date(d.getFullYear(), d.getMonth() - i, 1); var k = m.getFullYear() + '-' + pad(m.getMonth() + 1); out.push('<option value="' + k + '"' + (k === ui.month ? ' selected' : '') + '>' + m.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }) + '</option>'); }
+    return out.join('');
+  }
+  function vReporte() {
+    var days = monthDays(ui.month), perDay = days.map(function (k) {
+      var c = {}; MEALS.forEach(function (m) { c[m] = 0; });
+      D().forEach(function (d) { mealsCounted(d, k).forEach(function (x) { c[x.meal]++; }); });
+      return { day: k, c: c, total: MEALS.reduce(function (s, m) { return s + c[m]; }, 0) };
+    });
+    var totals = {}; MEALS.forEach(function (m) { totals[m] = perDay.reduce(function (s, p) { return s + p.c[m]; }, 0); });
+    var trays = MEALS.reduce(function (s, m) { return s + totals[m]; }, 0);
+    var patients = D().filter(function (d) { return days.some(function (k) { return mealsCounted(d, k).length; }); }).length;
+    var dietDays = 0; days.forEach(function (k) { D().forEach(function (d) { if (mealsCounted(d, k).length) dietDays++; }); });
+    var kp = '<div class="kpis">' + kpi('Bandejas del mes', trays.toLocaleString('es-CO'), 'Suma de todos los tiempos de comida', 'k-brand') +
+      kpi('Promedio diario', days.length ? (dietDays / days.length).toFixed(1).replace('.', ',') : '0', 'Dietas vigentes por día', 'k-brand') +
+      kpi('Pacientes en el mes', patients, 'Con al menos un día de dieta', 'k-brand') +
+      kpi('Dietas activas hoy', activeDiets().length, activeDiets().filter(function (d) { return cur(d).iso === 'Sí'; }).length + ' en aislamiento', 'k-brand') + '</div>';
+    // Gráfica de barras apiladas (SVG)
+    var W = 760, H = 300, L = 40, R = 10, Tp = 14, B = 34, max = Math.max(1, Math.max.apply(null, perDay.map(function (p) { return p.total; })));
+    var step = max <= 10 ? 2 : max <= 50 ? 10 : max <= 100 ? 20 : 50, top = Math.ceil(max / step) * step;
+    var bw = days.length ? (W - L - R) / days.length : 0, svg = '';
+    for (var t = 0; t <= top; t += step) { var y = Tp + (H - Tp - B) * (1 - t / top); svg += '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '"/><text x="' + (L - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + t + '</text>'; }
+    perDay.forEach(function (p, i) {
+      var x = L + i * bw + bw * 0.18, w = Math.max(2, bw * 0.64), yb = H - B;
+      MEALS.forEach(function (m) {
+        var v = p.c[m]; if (!v) return;
+        var h = (H - Tp - B) * v / top;
+        svg += '<rect class="seg" x="' + x.toFixed(1) + '" y="' + (yb - h).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + Math.max(0, h - 1.5).toFixed(1) + '" rx="1.5" fill="' + MEAL_COLOR[m] + '"><title>' + fmtDate(p.day) + ' · ' + MEAL_LABEL[m] + ': ' + v + '</title></rect>';
+        yb -= h;
+      });
+      if (days.length <= 16 || i % 2 === 0) svg += '<text x="' + (L + i * bw + bw / 2).toFixed(1) + '" y="' + (H - B + 16) + '" text-anchor="middle">' + p.day.slice(8) + '</text>';
+    });
+    var leg = '<div class="legend" style="margin-top:8px">' + MEALS.map(function (m) { return '<span><span class="dot" style="background:' + MEAL_COLOR[m] + '"></span> ' + MEAL_LABEL[m] + '</span>'; }).join('') + '</div>';
+    var bars = MEALS.map(function (m) { var pct = trays ? totals[m] / trays * 100 : 0; return '<div class="bar-row"><span>' + MEAL_LABEL[m] + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct.toFixed(1) + '%;background:' + MEAL_COLOR[m] + '"></div></div><span class="num small" style="text-align:right">' + totals[m] + ' (' + Math.round(pct) + '%)</span></div>'; }).join('');
+    var table = '<details style="margin-top:12px"><summary style="cursor:pointer;font-weight:600">Ver tabla diaria</summary><div class="twrap" style="margin-top:8px"><table><thead><tr><th>Día</th>' + MEALS.map(function (m) { return '<th>' + MEAL_LABEL[m] + '</th>'; }).join('') + '<th>Total</th></tr></thead><tbody>' +
+      perDay.map(function (p) { return '<tr><td>' + fmtDate(p.day) + '</td>' + MEALS.map(function (m) { return '<td class="num">' + p.c[m] + '</td>'; }).join('') + '<td class="num"><b>' + p.total + '</b></td></tr>'; }).join('') + '</tbody></table></div></details>';
+    return '<div class="head"><div><h1>Reporte nutricional de dietas</h1><p>' + days.length + ' día(s) contados. Cada dieta usa su última versión del día; el día del alta solo cuentan los tiempos anteriores a la hora del alta.</p></div><div class="actions"><select class="input" data-a="month" aria-label="Mes">' + monthOptions() + '</select><button type="button" class="btn btn-primary" data-a="excel">Descargar Excel del mes</button></div></div>' + kp +
+      '<div class="grid2"><div class="card card-pad"><h2>Producción diaria</h2><p class="sub">Bandejas por día y tiempo de comida</p><div class="chart-wrap"><svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Bandejas por día del mes, apiladas por tiempo de comida">' + svg + '</svg></div>' + leg + table + '</div>' +
+      '<div class="card card-pad"><h2>Total del mes por tiempo de comida</h2><p class="sub">Participación de cada tiempo</p><div class="bars" style="margin-top:14px">' + bars + '</div><div style="display:flex;justify-content:space-between;margin-top:16px;padding:12px 14px;background:var(--surface2);border-radius:10px"><span>Total bandejas</span><b class="num">' + trays.toLocaleString('es-CO') + '</b></div></div></div>';
+  }
+
+  // ── Facturación y precios ──
+  function vFacturacion() {
+    var days = monthDays(ui.month), sum = {};
+    days.forEach(function (k) {
+      D().forEach(function (d) {
+        mealsCounted(d, k).forEach(function (x) {
+          if (x.meal === 'fraccionada') return; // la fraccionada no se factura
+          var type = BILLING[x.billing][1].indexOf(x.meal) >= 0 ? x.billing : (SNACKS.indexOf(x.meal) >= 0 ? 'entrecomidas' : x.billing);
+          sum[type] = sum[type] || {}; sum[type][x.meal] = (sum[type][x.meal] || 0) + 1;
+        });
+      });
+    });
+    var svcs = ['desayuno', 'mediamanana', 'almuerzo', 'algo', 'cena', 'merienda'], grand = 0, units = 0;
+    var rows = Object.keys(BILLING).filter(function (t) { return sum[t]; }).map(function (t) {
+      var val = 0, u = 0;
+      var cells = svcs.map(function (s) { var n = (sum[t][s] || 0); u += n; val += n * ((S.prices[t] || {})[s] || 0); return '<td class="num">' + (n || '<span class="muted">—</span>') + '</td>'; }).join('');
+      grand += val; units += u;
+      return '<tr><td><b>' + BILLING[t][0] + '</b></td>' + cells + '<td class="num"><b>' + u + '</b></td><td class="num"><b>' + money(val) + '</b></td></tr>';
+    }).join('') || '<tr><td colspan="9" class="empty">No hay servicios para facturar este mes.</td></tr>';
+    var priceRows = Object.keys(BILLING).map(function (t) {
+      return '<tr><td>' + BILLING[t][0] + '</td>' + svcs.map(function (s) { return '<td>' + (BILLING[t][1].indexOf(s) >= 0 ? '<input class="price" type="number" min="0" step="100" value="' + S.prices[t][s] + '" data-a="price" data-t="' + t + '" data-s="' + s + '" aria-label="Precio ' + BILLING[t][0] + ' ' + SERVICE_LABEL[s] + '">' : '<span class="muted">—</span>') + '</td>'; }).join('') + '</tr>';
+    }).join('');
+    return '<div class="head"><div><h1>Facturación y precios</h1><p>Valor del mes por tipo de dieta y servicio. Fraccionada no se factura; los refrigerios sin fila propia van a Entrecomidas.</p></div><div class="actions"><select class="input" data-a="month" aria-label="Mes">' + monthOptions() + '</select><button type="button" class="btn btn-success" data-a="excel">Descargar Excel de facturación</button></div></div>' +
+      '<div class="kpis">' + kpi('Total del mes', money(grand), 'Servicios valorados con su precio', 'k-ok') + kpi('Servicios', units.toLocaleString('es-CO'), 'Sin fraccionada', 'k-brand') + kpi('Tipos de dieta', Object.keys(sum).length, 'Con consumo en el mes', 'k-brand') + kpi('Unidad', 'UCI', 'Formato del hospital', 'k-brand') + '</div>' +
+      '<div class="box box-info">En la demo se valora lo <b>programado</b>. En la aplicación real solo se factura lo <b>recibido</b> en días completados.</div>' +
+      '<div class="card"><div class="toolbar"><h2>Resumen del mes</h2></div><div class="twrap"><table><thead><tr><th>Tipo de dieta</th>' + svcs.map(function (s) { return '<th>' + SERVICE_LABEL[s] + '</th>'; }).join('') + '<th>Total</th><th>Valor</th></tr></thead><tbody>' + rows + '</tbody>' +
+      '<tfoot><tr><td><b>Total</b></td><td colspan="6"></td><td class="num"><b>' + units + '</b></td><td class="num"><b>' + money(grand) + '</b></td></tr></tfoot></table></div></div>' +
+      '<div class="card"><div class="toolbar"><div><h2>Precios vigentes</h2><p class="sub">Edita un precio y el total del mes se recalcula.</p></div></div><div class="twrap"><table><thead><tr><th>Tipo</th>' + svcs.map(function (s) { return '<th>' + SERVICE_LABEL[s] + '</th>'; }).join('') + '</tr></thead><tbody>' + priceRows + '</tbody></table></div></div>';
+  }
+
+  // ── Empresas (admin y jefe de despacho) ──
+  function vEmpresas() {
+    var admin = user.role === 'admin';
+    var list = managedCos().slice().sort(function (a, b) { return b.isDefault - a.isDefault || a.name.localeCompare(b.name); });
+    var rows = list.map(function (c) {
+      var mgr = S.users.find(function (u) { return u.id === c.managerId; });
+      var open = S.diets.filter(function (d) { return d.companyId === c.id && d.status === 'active'; }).length;
+      return '<tr><td><b>' + esc(c.name) + '</b>' + (c.isDefault ? ' <span class="tag chip-brand">Predeterminada</span>' : '') + '</td><td class="nit">' + esc(c.nit) + '</td>' +
+        '<td>' + esc(c.contact || '—') + '<div class="small muted">' + esc([c.phone, c.email].filter(Boolean).join(' · ')) + '</div></td>' +
+        (admin ? '<td>' + (mgr ? esc(mgr.name) : '<span class="muted">—</span>') + '</td>' : '') +
+        '<td class="num">' + open + '</td><td>' + (c.active ? '<span class="tag chip-ok">Activa</span>' : '<span class="tag chip-muted">Inactiva</span>') + '</td>' +
+        '<td class="actions"><div class="acts"><button type="button" class="btn btn-success btn-sm" data-a="editCo" data-co="' + c.id + '">Editar</button>' +
+        (c.isDefault ? '' : '<button type="button" class="btn btn-sm ' + (c.active ? 'btn-ghost' : 'btn-primary') + '" data-a="toggleCo" data-co="' + c.id + '">' + (c.active ? 'Desactivar' : 'Activar') + '</button>') + '</div></td></tr>';
+    }).join('') || '<tr><td colspan="7" class="empty">Todavía no tienes empresas. Crea la primera.</td></tr>';
+    return '<div class="head"><div><h1>Empresas</h1><p>' + (admin ? 'Empresas que atiende el despacho. Cada una tiene su jefe de despacho y sus datos separados.' : 'Tus empresas: créalas, edítalas o desactívalas. Las de otros jefes de despacho no aparecen.') + '</p></div><div class="actions"><button type="button" class="btn btn-primary" data-a="newCo">+ Nueva empresa</button></div></div>' +
+      '<div class="box box-info">Las empresas no se borran: al desactivarla sale de los selectores y conserva su historial. La predeterminada no se desactiva.</div>' +
+      '<div class="card"><div class="twrap"><table><thead><tr><th>Empresa</th><th>NIT</th><th>Contacto</th>' + (admin ? '<th>Jefe de despacho</th>' : '') + '<th>Dietas activas</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+  function openCompany(c) {
+    var admin = user.role === 'admin', v = c || { name: '', nit: '', contact: '', phone: '', email: '', managerId: '' };
+    var mgrs = S.users.filter(function (u) { return u.role === 'jefe_despacho' && u.active; });
+    var body = '<div class="form-grid">' +
+      '<div class="field full"><label for="co-name">Nombre</label><input class="input" id="co-name" maxlength="150" value="' + esc(v.name) + '" placeholder="Ej. Clínica San Rafael"></div>' +
+      '<div class="field"><label for="co-nit">NIT con dígito de verificación</label><input class="input" id="co-nit" value="' + esc(v.nit) + '" placeholder="900123456-8"></div>' +
+      '<div class="field"><label for="co-contact">Contacto</label><input class="input" id="co-contact" value="' + esc(v.contact) + '" placeholder="Nombre del contacto"></div>' +
+      '<div class="field"><label for="co-phone">Teléfono</label><input class="input" id="co-phone" value="' + esc(v.phone) + '" placeholder="+573001234567"></div>' +
+      '<div class="field"><label for="co-email">Correo</label><input class="input" id="co-email" type="email" value="' + esc(v.email) + '" placeholder="contacto@empresa.co"></div>' +
+      (admin ? '<div class="field full"><label for="co-mgr">Jefe de despacho</label><select class="input" id="co-mgr"><option value="">Elige el jefe de despacho</option>' + mgrs.map(function (u) { return '<option value="' + u.id + '"' + (u.id === v.managerId ? ' selected' : '') + '>' + esc(u.name) + '</option>'; }).join('') + '</select></div>'
+        : '<p class="small muted full" style="margin:0">La empresa queda a tu nombre como jefe de despacho.</p>') +
+      '<p class="err-msg full" id="f-err" hidden></p></div>';
+    openModal(c ? 'Editar empresa' : 'Nueva empresa', body, '<button type="button" class="btn btn-ghost" data-a="closeModal">Cancelar</button><button type="button" class="btn btn-primary" data-a="saveCo"' + (c ? ' data-co="' + c.id + '"' : '') + '>' + (c ? 'Guardar' : 'Crear empresa') + '</button>');
+  }
+  function giveCompany(uid, cid) { var u = S.users.find(function (x) { return x.id === uid; }); if (u && u.companies !== 'all' && u.companies.indexOf(cid) < 0) u.companies.push(cid); }
+
+  // ── Usuarios ──
+  // Quién aparece: el admin ve a todos; el jefe de nutrición, a los nutricionistas;
+  // el jefe de despacho, los despachadores y (de solo lectura) los nutricionistas de sus empresas
+  function visibleUsers() {
+    if (user.role === 'admin') return S.users;
+    if (user.role === 'jefe_despacho') {
+      var mine = managedCos().map(function (c) { return c.id; });
+      return S.users.filter(function (u) { return ACCESS.jefe_despacho.seesRoles.indexOf(u.role) >= 0 && u.companies !== 'all' && u.companies.some(function (id) { return mine.indexOf(id) >= 0; }); });
+    }
+    return S.users.filter(function (u) { return ACCESS[user.role].usersOnly.indexOf(u.role) >= 0; });
+  }
+  // Empresas que puede asignar: el jefe de despacho solo las suyas
+  function assignableCos() { return (user.role === 'jefe_despacho' ? managedCos() : S.companies).filter(function (c) { return c.active; }); }
+  function coAccess(u) {
+    if (hasAll(u)) return '<span class="tag chip-brand">Todas</span>';
+    var list = u.companies.map(coById).filter(Boolean);
+    return list.length ? '<div class="tags">' + list.map(function (c) { return '<span class="tag ' + (c.active ? 'chip-muted' : 'tag-del') + '">' + esc(c.name) + '</span>'; }).join('') + '</div>' : '<span class="tag chip-err">Sin empresa asignada</span>';
+  }
+  function coChecks(id, selected, allowAll, all) {
+    return '<div class="opts" id="' + id + '">' + (allowAll ? '<label class="check small"><input type="checkbox" value="all"' + (all ? ' checked' : '') + '> Todas (incluye las futuras)</label>' : '') +
+      assignableCos().map(function (c) { return '<label class="check small"><input type="checkbox" value="' + c.id + '"' + (selected.indexOf(c.id) >= 0 ? ' checked' : '') + '> ' + esc(c.name) + '</label>'; }).join('') + '</div>';
+  }
+  function readCos(id) {
+    var v = [].slice.call(document.querySelectorAll('#' + id + ' input:checked')).map(function (i) { return i.value; });
+    return { all: v.indexOf('all') >= 0, ids: v.filter(function (x) { return x !== 'all'; }).map(Number) };
+  }
+  function vUsuarios() {
+    var acc = ACCESS[user.role], list = visibleUsers(), admin = user.role === 'admin';
+    var roles = acc.usersOnly || Object.keys(ROLE);
+    var rows = list.map(function (u) {
+      var act = [];
+      if (admin && u.id !== user.id) act.push('<button type="button" class="btn btn-sm ' + (u.active ? 'btn-ghost' : 'btn-success') + '" data-a="toggleUser" data-id="' + u.id + '">' + (u.active ? 'Desactivar' : 'Activar') + '</button>');
+      if ((admin && u.role !== 'admin') || (user.role === 'jefe_despacho' && u.role === 'despachador')) act.push('<button type="button" class="btn btn-sm btn-outline-primary" data-a="userCos" data-id="' + u.id + '">Empresas</button>');
+      return '<tr><td><b>' + esc(u.name) + '</b></td><td>' + esc(u.email) + '</td><td><span class="tag chip-brand">' + ROLE[u.role] + '</span></td><td>' + coAccess(u) + '</td><td>' + (u.active ? '<span class="tag chip-ok">Activo</span>' : '<span class="tag chip-muted">Inactivo</span>') + '</td><td class="actions">' +
+        (act.length ? '<div class="acts">' + act.join('') + '</div>' : '<span class="muted small">' + (u.id === user.id ? 'Tu usuario' : 'Solo lectura') + '</span>') + '</td></tr>';
+    }).join('') || '<tr><td colspan="6" class="empty">Todavía no hay usuarios que puedas ver.</td></tr>';
+    var intro = admin ? 'Crea usuarios, asigna su rol, sus empresas y activa o desactiva su acceso.'
+      : user.role === 'jefe_despacho' ? 'Crea y edita los despachadores de tus empresas. Los nutricionistas de tus empresas aparecen de solo lectura: los crea y asocia el administrador.'
+      : 'Como jefe de nutrición puedes ver y crear nutricionistas.';
+    var hint = admin ? 'El despachador siempre lleva empresas específicas; el administrador tiene todas.' : user.role === 'jefe_despacho' ? 'Solo puedes asignar tus empresas.' : 'Elige las empresas del nutricionista.';
+    return '<div class="head"><div><h1>Usuarios</h1><p>' + intro + '</p></div></div>' +
+      '<div class="card card-pad"><h2>Nuevo usuario</h2><form id="newUser" class="form-grid" style="margin-top:12px" novalidate>' +
+      '<div class="field"><label for="nu-name">Nombre</label><input class="input" id="nu-name" required placeholder="Nombre y apellido"></div>' +
+      '<div class="field"><label for="nu-email">Correo</label><input class="input" id="nu-email" type="email" required placeholder="nombre@hospital.co"></div>' +
+      '<div class="field"><label for="nu-role">Rol</label><select class="input" id="nu-role">' + roles.map(function (r) { return '<option value="' + r + '">' + ROLE[r] + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field full"><span class="lbl">Empresas</span>' + coChecks('nu-cos', [], admin, false) + '<span class="small muted">' + hint + '</span></div>' +
+      '<div class="field"><button type="submit" class="btn btn-primary">Crear usuario</button></div><p class="err-msg full" id="nu-err" hidden></p></form></div>' +
+      '<div class="card"><div class="twrap"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Empresas</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+  function openUserCos(u) {
+    var admin = user.role === 'admin', ids = u.companies === 'all' ? [] : u.companies;
+    openModal('Empresas de ' + esc(u.name), '<p style="margin:0" class="small muted">' + ROLE[u.role] + (u.role === 'despachador' ? ': siempre con empresas específicas.' : '.') + (admin ? '' : ' Solo cambias tus empresas; las demás que tenga se conservan.') + '</p>' +
+      coChecks('uc-cos', ids, admin && u.role !== 'despachador', u.companies === 'all') + '<p class="err-msg" id="f-err" hidden></p>',
+      '<button type="button" class="btn btn-ghost" data-a="closeModal">Cancelar</button><button type="button" class="btn btn-primary" data-a="saveUserCos" data-id="' + u.id + '">Guardar</button>');
+  }
+
+  // ── Auditoría ──
+  function vAuditoria() {
+    var rows = S.audit.map(function (a) { var c = a.co ? coById(a.co) : null; return '<tr><td class="num">' + fmtDateTime(a.at) + '</td><td>' + esc(a.who) + '</td><td>' + (c ? esc(c.name) : '<span class="muted">—</span>') + '</td><td>' + esc(a.what) + '</td></tr>'; }).join('');
+    return '<div class="head"><div><h1>Auditoría</h1><p>Registro de lo que se hizo en la demo. Sin datos clínicos: solo habitación o identificadores.</p></div></div>' +
+      '<div class="card"><div class="twrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Empresa</th><th>Acción</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+
+  // ════════════════ Modales ════════════════
+  var modalEl = document.getElementById('modal'), lastFocus = null;
+  function openModal(title, body, foot) {
+    lastFocus = document.activeElement;
+    modalEl.innerHTML = '<div class="overlay" data-a="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="modal-h"><h2 id="mt">' + title + '</h2><button type="button" class="x" data-a="closeModal" aria-label="Cerrar">×</button></div><div class="modal-b">' + body + '</div><div class="modal-f">' + foot + '</div></div></div>';
+    var f = modalEl.querySelector('input, select, textarea, .pick, .btn'); if (f) f.focus();
+  }
+  function closeModal() { modalEl.innerHTML = ''; if (lastFocus && document.body.contains(lastFocus)) lastFocus.focus(); }
+  function picker(name, options, selected, cls) {
+    return '<div class="picker" role="group" aria-label="' + name + '">' + Object.keys(options).map(function (k) {
+      return '<button type="button" class="pick ' + cls + '" data-a="pick" data-k="' + k + '" aria-pressed="' + (selected.indexOf(k) >= 0) + '">' + esc(options[k]) + '</button>';
+    }).join('') + '</div>';
+  }
+  function dietForm(d) {
+    var v = d ? cur(d) : { time: [], cons: [], spec: [], obs: '', iso: 'No', billing: 'normal' };
+    var timeOpts = {}; MEALS.forEach(function (m) { timeOpts[m] = MEAL_LABEL[m]; });
+    return '<div class="form-grid">' +
+      '<div class="field"><label for="f-room">Habitación</label><input class="input" id="f-room" value="' + esc(d ? d.room : '') + '" placeholder="Ej. 214"' + (d ? ' readonly' : '') + '></div>' +
+      '<div class="field"><label for="f-patient">Paciente</label><input class="input" id="f-patient" value="' + esc(d ? d.patient : '') + '" placeholder="Nombre del paciente"' + (d ? ' readonly' : '') + '></div>' +
+      '<div class="field full"><span class="lbl">Tiempos de comida</span><div id="f-time">' + picker('Tiempos de comida', timeOpts, v.time, 'p-time') + '</div></div>' +
+      '<div class="field full"><span class="lbl">Consistencia</span><div id="f-cons">' + picker('Consistencia', CONS, v.cons, 'p-cons') + '</div></div>' +
+      '<div class="field full"><span class="lbl">Especificaciones</span><div id="f-spec">' + picker('Especificaciones', SPEC, v.spec, 'p-spec') + '</div></div>' +
+      '<div class="field"><label for="f-billing">Tipo de dieta (facturación)</label><select class="input" id="f-billing">' + Object.keys(BILLING).filter(function (t) { return t !== 'entrecomidas'; }).map(function (t) { return '<option value="' + t + '"' + (t === v.billing ? ' selected' : '') + '>' + BILLING[t][0] + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="f-iso">Aislamiento</label><select class="input" id="f-iso"><option' + (v.iso === 'No' ? ' selected' : '') + '>No</option><option' + (v.iso === 'Sí' ? ' selected' : '') + '>Sí</option></select></div>' +
+      '<div class="field full"><label for="f-obs">Observaciones</label><textarea class="input" id="f-obs" rows="2" placeholder="Indicaciones para cocina">' + esc(v.obs) + '</textarea></div>' +
+      '<p class="err-msg full" id="f-err" hidden></p></div>';
+  }
+  function picked(id) { return [].slice.call(document.querySelectorAll('#' + id + ' .pick[aria-pressed="true"]')).map(function (b) { return b.dataset.k; }); }
+  function formError(msg) { var e = document.getElementById('f-err'); e.textContent = msg; e.hidden = false; }
+  function readForm() {
+    return { room: document.getElementById('f-room').value.trim(), patient: document.getElementById('f-patient').value.trim(), time: MEALS.filter(function (m) { return picked('f-time').indexOf(m) >= 0; }), cons: picked('f-cons'), spec: picked('f-spec'), billing: document.getElementById('f-billing').value, iso: document.getElementById('f-iso').value, obs: document.getElementById('f-obs').value.trim() };
+  }
+  function openCreate() { openModal('Registrar dieta', dietForm(null), '<button type="button" class="btn btn-ghost" data-a="closeModal">Cancelar</button><button type="button" class="btn btn-primary" data-a="saveCreate">Registrar</button>'); }
+  function openEdit(d) { openModal('Editar dieta · Hab. ' + esc(d.room), '<div class="box box-info">Guardar crea la versión ' + (cur(d).v + 1) + '. La versión actual no se modifica y cocina verá el cambio para confirmarlo.</div>' + dietForm(d), '<button type="button" class="btn btn-ghost" data-a="closeModal">Cancelar</button><button type="button" class="btn btn-primary" data-a="saveEdit" data-id="' + d.id + '">Actualizar</button>'); }
+  function openClose(d, kind) {
+    var T = today(), notRec = d.dispatches.filter(function (x) { return !x.receivedAt; }), recToday = d.dispatches.filter(function (x) { return x.date === T && x.receivedAt; });
+    var pendingMeals = cur(d).time.filter(function (m) { return !dispatchOf(d, T, m); });
+    var body = '<p style="margin:0">' + (kind === 'finish' ? '¿Dar de alta a <b>' + esc(d.patient) + '</b>? La dieta pasa a Finalizadas. El registro y su historial se conservan.' : '¿Cancelar la dieta de <b>' + esc(d.patient) + '</b>? Cocina deja de despacharla desde ahora.') + '</p>' +
+      (notRec.length ? '<div class="box box-warn"><b>' + notRec.length + (notRec.length === 1 ? ' despacho sin confirmar la recepción' : ' despachos sin confirmar la recepción') + ':</b><ul>' + notRec.map(function (x) { return '<li>' + MEAL_LABEL[x.meal] + ', despachado ' + fmtDateTime(x.at) + '</li>'; }).join('') + '</ul>Salieron de cocina antes del cierre: se cobran al recibirse.</div>' : '') +
+      (recToday.length ? '<div class="box box-ok"><b>Recibido hoy:</b> ' + recToday.map(function (x) { return MEAL_LABEL[x.meal]; }).join(', ') + '.</div>' : '');
+    if (kind === 'finish' && pendingMeals.length) {
+      body += '<div class="field"><label for="tr-dest">Enviar a otro lugar (opcional)</label><input class="input" id="tr-dest" placeholder="Ej. Clínica San Rafael (remitido)"></div><div class="field"><span class="lbl">Tiempos de hoy que se envían</span><div class="tags" id="tr-meals">' +
+        pendingMeals.map(function (m) { return '<label class="check small" style="margin-right:10px"><input type="checkbox" value="' + m + '"> ' + MEAL_LABEL[m] + '</label>'; }).join('') + '</div></div>';
+    }
+    openModal((kind === 'finish' ? 'Dar de alta' : 'Cancelar dieta') + ' · Hab. ' + esc(d.room), body + '<p class="err-msg" id="f-err" hidden></p>', '<button type="button" class="btn btn-ghost" data-a="closeModal">Volver</button><button type="button" class="btn ' + (kind === 'finish' ? 'btn-info' : 'btn-danger') + '" data-a="saveClose" data-kind="' + kind + '" data-id="' + d.id + '">' + (kind === 'finish' ? 'Dar de alta' : 'Cancelar dieta') + '</button>');
+  }
+  function openVoid(d, i, kind) {
+    var x = d.dispatches[i], missing = kind === 'missing';
+    if (!x || x.receivedAt) return;
+    var body = '<p style="margin:0">Hab. <b>' + esc(d.room) + '</b> · ' + esc(d.patient) + ' · <span class="tag tag-time">' + MEAL_LABEL[x.meal] + '</span> despachado a las ' + fmtTime(x.at) + ' por ' + esc(x.by) + '.</p>' +
+      '<div class="box box-info">' + (missing ? 'El despacho queda como no recibido y no se factura. La cocina ve el aviso y puede volver a despacharlo.' : 'El despacho se anula y la dieta vuelve a quedar lista para despachar en este servicio. Nutrición ya no lo verá por recibir.') + '</div>' +
+      '<div class="field"><label for="v-reason">Motivo (opcional)</label><input class="input" id="v-reason" maxlength="120" placeholder="' + (missing ? 'Ej.: no llegó a la habitación' : 'Ej.: se despachó la habitación equivocada') + '"></div>';
+    openModal((missing ? 'El despacho no llegó' : 'Anular despacho') + ' · Hab. ' + esc(d.room), body, '<button type="button" class="btn btn-ghost" data-a="closeModal">Volver</button><button type="button" class="btn btn-danger" data-a="saveVoid" data-kind="' + kind + '" data-id="' + d.id + '" data-i="' + i + '">' + (missing ? 'Reportar que no llegó' : 'Anular despacho') + '</button>');
+  }
+  function openLogout() { openModal('Cambiar de usuario', '<p style="margin:0">Vuelves a la pantalla de entrada para elegir otro usuario de prueba. Los datos de la demo se conservan.</p>', '<button type="button" class="btn btn-ghost" data-a="closeModal">Cancelar</button><button type="button" class="btn btn-danger" data-a="doLogout">Cambiar de usuario</button>'); }
+  function openReset() { openModal('Reiniciar demo', '<p style="margin:0">Se borran los cambios que hiciste y se cargan de nuevo los datos de prueba originales.</p>', '<button type="button" class="btn btn-ghost" data-a="closeModal">Cancelar</button><button type="button" class="btn btn-danger" data-a="doReset">Reiniciar</button>'); }
+
+  // ════════════════ Acciones ════════════════
+  function toast(msg) { var t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.getElementById('toasts').appendChild(t); setTimeout(function () { t.remove(); }, 3800); }
+  function commit(msg, auditMsg) { save(auditMsg); closeModal(); render(); if (msg) toast(msg); }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-a]'); if (!el) return;
+    var a = el.dataset.a, d = el.dataset.id ? byId(el.dataset.id) : null;
+    if (el.tagName === 'INPUT' || el.tagName === 'SELECT') return; // los maneja «change»
+    switch (a) {
+      case 'login': user = S.users.find(function (u) { return u.id === el.dataset.id; }); try { sessionStorage.setItem(USER_KEY, user.id); sessionStorage.removeItem(CO_KEY); } catch (er) {} view = null; coId = null; ui.histId = null; resolveCo(); ui.sel = {}; ui.rsel = {}; audit('Inicio de sesión (' + ROLE[user.role] + ')'); render(); break;
+      case 'logout': openLogout(); break;
+      case 'doLogout': try { sessionStorage.removeItem(USER_KEY); } catch (er) {} user = null; closeModal(); render(); break;
+      case 'reset': openReset(); break;
+      case 'doReset': S = seed(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (er) {} if (user) user = S.users.find(function (u) { return u.id === user.id; }) || null; ui.sel = {}; ui.rsel = {}; closeModal(); render(); toast('Demo reiniciada con los datos de prueba'); break;
+      case 'go': e.preventDefault(); view = el.dataset.v; ui.menu = false; render(); window.scrollTo(0, 0); break;
+      case 'menu': ui.menu = !ui.menu; render(); break;
+      case 'tab': ui.tab = el.dataset.k; render(); break;
+      case 'create': openCreate(); break;
+      case 'edit': openEdit(d); break;
+      case 'close': openClose(d, el.dataset.kind); break;
+      case 'hist': ui.histId = d.id; view = 'historial'; render(); window.scrollTo(0, 0); break;
+      case 'overlay': if (e.target === el) closeModal(); break;
+      case 'closeModal': closeModal(); break;
+      case 'pick': el.setAttribute('aria-pressed', el.getAttribute('aria-pressed') !== 'true'); break;
+      case 'saveCreate': {
+        var f = readForm();
+        if (!f.room || !f.patient) return formError('Escribe la habitación y el nombre del paciente.');
+        if (!f.time.length) return formError('Elige al menos un tiempo de comida.');
+        if (!f.cons.length) return formError('Elige la consistencia.');
+        if (activeDiets().some(function (x) { return x.room === f.room; })) return formError('La habitación ' + f.room + ' ya tiene una dieta activa. Edítala en lugar de registrar otra.');
+        var nd = { id: S.nextId++, companyId: coId, room: f.room, patient: f.patient, status: 'active', createdAt: isoNow(), closedAt: null, transfer: null, days: {}, dispatches: [], versions: [] };
+        nd.versions.push({ v: 1, at: nd.createdAt, by: user.name, time: f.time, cons: f.cons, spec: f.spec, obs: f.obs, iso: f.iso, billing: f.billing, change: 'creada', pending: false });
+        nd.days[today()] = { authorized: true, completedAt: null };
+        S.diets.push(nd);
+        commit('Dieta registrada · Hab. ' + f.room, 'Registró la dieta de la habitación ' + f.room);
+        break;
+      }
+      case 'saveEdit': {
+        var g = readForm(), c = cur(d);
+        if (!g.time.length) return formError('Elige al menos un tiempo de comida.');
+        if (!g.cons.length) return formError('Elige la consistencia.');
+        var same = JSON.stringify([g.time, g.cons, g.spec.slice().sort(), g.obs, g.iso, g.billing]) === JSON.stringify([c.time, c.cons, c.spec.slice().sort(), c.obs, c.iso, c.billing]);
+        if (same) return formError('No hay cambios para guardar.');
+        addVersion(d, { time: g.time, cons: g.cons, spec: g.spec, obs: g.obs, iso: g.iso, billing: g.billing }, 'editada', true);
+        commit('Versión ' + cur(d).v + ' creada · cocina debe confirmarla', 'Editó la dieta de la habitación ' + d.room + ' (versión ' + cur(d).v + ')');
+        break;
+      }
+      case 'saveClose': {
+        var kind = el.dataset.kind;
+        if (kind === 'finish') {
+          var dest = document.getElementById('tr-dest'), ms = [].slice.call(document.querySelectorAll('#tr-meals input:checked')).map(function (i) { return i.value; });
+          if (dest && dest.value.trim() && !ms.length) return formError('Elige los tiempos de hoy que se envían a ' + dest.value.trim() + '.');
+          if (dest && dest.value.trim()) d.transfer = { dest: dest.value.trim(), meals: ms, date: today() };
+        }
+        addVersion(d, {}, kind === 'finish' ? 'finalizada' : 'cancelada', true);
+        d.status = kind === 'finish' ? 'finished' : 'cancelled'; d.closedAt = isoNow();
+        commit(kind === 'finish' ? 'Alta registrada · Hab. ' + d.room : 'Dieta cancelada · Hab. ' + d.room, (kind === 'finish' ? 'Dio de alta' : 'Canceló') + ' la dieta de la habitación ' + d.room);
+        break;
+      }
+      case 'continue': {
+        var tm = addDays(today(), 1);
+        d.days[tm] = { authorized: true, completedAt: null, by: user.name };
+        addVersion(d, {}, 'continuada', false);
+        commit('Mañana autorizado · Hab. ' + d.room, 'Continuó la dieta de la habitación ' + d.room + ' para ' + tm);
+        break;
+      }
+      case 'receive': {
+        var keys = Object.keys(ui.rsel).filter(function (k) { return ui.rsel[k]; }), n = 0, touched = {};
+        keys.forEach(function (k) { var p = k.split(':'), dd = byId(p[0]), x = dd && dd.dispatches[+p[1]]; if (x && !x.receivedAt) { x.receivedAt = isoNow(); x.receivedBy = user.name; n++; touched[dd.id] = x.date; } });
+        Object.keys(touched).forEach(function (id) { evaluateDay(byId(id), touched[id]); });
+        ui.rsel = {};
+        commit(n + (n === 1 ? ' despacho recibido' : ' despachos recibidos'), 'Confirmó la recepción de ' + n + ' despacho(s)');
+        break;
+      }
+      case 'voidDispatch': if (d) openVoid(d, +el.dataset.i, el.dataset.kind); break;
+      case 'saveVoid': {
+        var vi = +el.dataset.i, vx = d && d.dispatches[vi], vk = el.dataset.kind;
+        if (!vx || vx.receivedAt) { closeModal(); toast('Ese despacho ya fue recibido.'); break; }
+        var reason = document.getElementById('v-reason').value.trim();
+        d.dispatches.splice(vi, 1);
+        (d.voided = d.voided || []).push(Object.assign({}, vx, { voidedAt: isoNow(), voidedBy: user.name, voidKind: vk, voidReason: reason }));
+        ui.rsel = {};
+        if (vk === 'missing') commit('Reportado: no llegó · Hab. ' + d.room, 'Reportó que no llegó ' + MEAL_LABEL[vx.meal] + ' de la habitación ' + d.room);
+        else commit('Despacho anulado · Hab. ' + d.room, 'Anuló el despacho de ' + MEAL_LABEL[vx.meal] + ' de la habitación ' + d.room);
+        break;
+      }
+      case 'confirm': d.versions.forEach(function (v) { v.pending = false; }); commit('Cambios confirmados · Hab. ' + d.room, 'Confirmó los cambios de la habitación ' + d.room); break;
+      case 'confirmAll': { var cnt = 0; D().forEach(function (x) { if (pendingOf(x)) { cnt++; x.versions.forEach(function (v) { v.pending = false; }); } }); commit(cnt + ' dietas confirmadas', 'Confirmó los cambios de ' + cnt + ' dieta(s)'); break; }
+      case 'dispatch': {
+        var svc = ui.service, ids = Object.keys(ui.sel).filter(function (k) { return ui.sel[k] && !blockReason(byId(k), svc); }), T = today();
+        ids.forEach(function (id) { byId(id).dispatches.push({ date: T, meal: svc, at: isoNow(), by: user.name, receivedAt: null, receivedBy: null }); });
+        ui.sel = {};
+        commit(ids.length + ' dieta(s) despachadas · ' + MEAL_LABEL[svc], 'Despachó ' + MEAL_LABEL[svc] + ' a ' + ids.length + ' habitación(es)');
+        break;
+      }
+      case 'toggleUser': {
+        var u = S.users.find(function (x) { return x.id === el.dataset.id; });
+        if (u.role === 'admin' && u.active && S.users.filter(function (x) { return x.role === 'admin' && x.active; }).length < 2) { toast('Debe quedar al menos un administrador activo.'); break; }
+        u.active = !u.active;
+        commit((u.active ? 'Usuario activado: ' : 'Usuario desactivado: ') + u.name, (u.active ? 'Activó' : 'Desactivó') + ' al usuario ' + u.email);
+        break;
+      }
+      case 'excel': toast('En la demo no se descargan archivos. En la aplicación se genera reporte-nutricional_' + slug((coById(coId) || { name: '' }).name) + '_' + ui.month + '.xlsx'); break;
+      case 'newCo': openCompany(null); break;
+      case 'editCo': { var ec = managedCos().find(function (c) { return c.id === +el.dataset.co; }); if (ec) openCompany(ec); break; }
+      case 'saveCo': {
+        var co = el.dataset.co ? managedCos().find(function (c) { return c.id === +el.dataset.co; }) : null;
+        var nm = document.getElementById('co-name').value.trim(), nt = document.getElementById('co-nit').value.replace(/[.\s]/g, ''), ph = document.getElementById('co-phone').value.trim(), em = document.getElementById('co-email').value.trim().toLowerCase();
+        var mg = user.role === 'admin' ? document.getElementById('co-mgr').value : (co ? co.managerId : user.id);
+        var others = S.companies.filter(function (c) { return c !== co; });
+        if (!nm) return formError('Escribe el nombre de la empresa.');
+        if (others.some(function (c) { return c.name.toLowerCase() === nm.toLowerCase(); })) return formError('Ya existe una empresa con ese nombre.');
+        if (!validNit(nt)) return formError('NIT inválido: revisa el dígito de verificación (formato 900123456-8).');
+        if (others.some(function (c) { return c.nit === nt; })) return formError('Ya existe una empresa con ese NIT.');
+        if (ph && !/^\+[1-9]\d{7,14}$/.test(ph)) return formError('El teléfono va con indicativo, por ejemplo +573001234567.');
+        if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) return formError('Escribe un correo válido.');
+        if (!mg) return formError('Elige el jefe de despacho de la empresa.');
+        var data = { name: nm, nit: nt, contact: document.getElementById('co-contact').value.trim(), phone: ph, email: em, managerId: mg };
+        if (co) Object.assign(co, data); else { co = Object.assign({ id: S.nextCompanyId++, active: true, isDefault: false }, data); S.companies.push(co); }
+        giveCompany(mg, co.id);
+        commit(el.dataset.co ? 'Empresa actualizada: ' + nm : 'Empresa creada: ' + nm, (el.dataset.co ? 'Editó' : 'Creó') + ' la empresa ' + nm + ' (NIT ' + nt + ')');
+        break;
+      }
+      case 'toggleCo': {
+        var tc = managedCos().find(function (c) { return c.id === +el.dataset.co; });
+        if (!tc || tc.isDefault) { toast('La empresa predeterminada no se desactiva.'); break; }
+        tc.active = !tc.active;
+        commit((tc.active ? 'Empresa activada: ' : 'Empresa desactivada: ') + tc.name, (tc.active ? 'Activó' : 'Desactivó') + ' la empresa ' + tc.name);
+        break;
+      }
+      case 'userCos': { var uu = visibleUsers().find(function (x) { return x.id === el.dataset.id; }); if (uu) openUserCos(uu); break; }
+      case 'saveUserCos': {
+        var tu = visibleUsers().find(function (x) { return x.id === el.dataset.id; }), sel = readCos('uc-cos');
+        if (!tu) break;
+        if (sel.all && tu.role === 'despachador') return formError('El despachador no puede tener «Todas»: elige sus empresas.');
+        // El jefe de despacho solo cambia sus empresas: las demás del usuario se conservan
+        var keep = user.role === 'admin' || tu.companies === 'all' ? [] : tu.companies.filter(function (id) { return !assignableCos().some(function (c) { return c.id === id; }); });
+        var ids = uniq(keep.concat(sel.ids));
+        if (!sel.all && !ids.length) return formError('Elige «Todas» o al menos una empresa.');
+        tu.companies = sel.all ? 'all' : ids;
+        commit('Empresas actualizadas: ' + tu.name, 'Cambió las empresas de ' + tu.email);
+        break;
+      }
+    }
+  });
+  document.addEventListener('change', function (e) {
+    var el = e.target, a = el.dataset && el.dataset.a; if (!a) return;
+    if (a === 'sel') { ui.sel[el.dataset.id] = el.checked; render(); }
+    else if (a === 'selAll') { D().forEach(function (d) { if ((d.status === 'active' || transferToday(d)) && !blockReason(d, ui.service)) ui.sel[d.id] = el.checked; }); render(); }
+    else if (a === 'rsel') { ui.rsel[el.dataset.k] = el.checked; render(); }
+    else if (a === 'service') { ui.service = el.value; ui.sel = {}; render(); }
+    else if (a === 'showAll') { ui.showAll = el.checked; render(); }
+    else if (a === 'histSel') { ui.histId = +el.value; render(); }
+    else if (a === 'month') { ui.month = el.value; render(); }
+    else if (a === 'dlService') { ui.dlService = el.value; render(); }
+    else if (a === 'dlState') { ui.dlState = el.value; render(); }
+    else if (a === 'price') { var v = Math.max(0, Math.round(+el.value || 0)); S.prices[el.dataset.t][el.dataset.s] = v; save('Cambió el precio de ' + BILLING[el.dataset.t][0] + ' · ' + SERVICE_LABEL[el.dataset.s] + ' a ' + money(v)); render(); toast('Precio actualizado'); }
+  });
+  document.addEventListener('input', function (e) {
+    if (e.target.dataset && e.target.dataset.a === 'search') {
+      ui.q = e.target.value; var pos = e.target.selectionStart; render();
+      var s = document.getElementById('q'); if (s) { s.focus(); s.setSelectionRange(pos, pos); }
+    }
+  });
+  document.addEventListener('submit', function (e) {
+    if (e.target.id === 'coSwitch') {
+      // Cambiar empresa: vuelve a la misma pantalla con los filtros limpios
+      e.preventDefault();
+      var nc = +document.getElementById('co-sel').value;
+      if (!userCos(user).some(function (c) { return c.id === nc; })) return;
+      coId = nc; try { sessionStorage.setItem(CO_KEY, coId); } catch (er) {}
+      ui.q = ''; ui.tab = 'active'; ui.sel = {}; ui.rsel = {}; ui.histId = null; ui.dlService = ''; ui.dlState = '';
+      render(); toast('Ahora trabajas en ' + coById(coId).name);
+      return;
+    }
+    if (e.target.id !== 'newUser') return;
+    e.preventDefault();
+    var name = document.getElementById('nu-name').value.trim(), email = document.getElementById('nu-email').value.trim().toLowerCase(), role = document.getElementById('nu-role').value, err = document.getElementById('nu-err');
+    var cs = readCos('nu-cos');
+    var fail = !name ? 'Escribe el nombre.' : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) ? 'Escribe un correo válido.' : S.users.some(function (u) { return u.email === email; }) ? 'Ya existe un usuario con ese correo.'
+      : role === 'admin' ? '' : cs.all && role === 'despachador' ? 'El despachador no puede tener «Todas»: elige sus empresas.' : !cs.all && !cs.ids.length ? 'Elige «Todas» o al menos una empresa.' : '';
+    if (fail) { err.textContent = fail; err.hidden = false; return; }
+    S.users.push({ id: 'u' + Date.now(), name: name, email: email, role: role, active: true, companies: role === 'admin' || cs.all ? 'all' : cs.ids });
+    commit('Usuario creado: ' + name, 'Creó al usuario ' + email + ' (' + ROLE[role] + ')');
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { if (modalEl.innerHTML) closeModal(); else if (ui.menu) { ui.menu = false; render(); } }
+    if (e.key === 'Tab' && modalEl.innerHTML) {
+      var f = [].slice.call(modalEl.querySelectorAll('button, input, select, textarea')).filter(function (x) { return !x.disabled; });
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  // Tiempo real entre pestañas: otra pestaña guardó cambios → se recargan los datos y se avisa
+  window.addEventListener('storage', function (e) {
+    if (e.key !== KEY || !e.newValue) return;
+    try { S = JSON.parse(e.newValue); } catch (er) { return; }
+    if (user) user = S.users.find(function (u) { return u.id === user.id && u.active; }) || null;
+    if (!modalEl.innerHTML) render();
+    var last = S.audit[0];
+    if (user && last && last.who !== user.name && (!last.co || last.co === coId)) toast('Cambio en vivo: ' + last.who + ' · ' + last.what);
+  });
+
+  var h = (location.hash || '').slice(1);
+  if (VIEWS[h]) view = h;
+  render();
+})();
+</script>
