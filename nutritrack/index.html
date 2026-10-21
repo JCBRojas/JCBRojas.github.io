@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NutriTrack Demo Premium</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -271,7 +275,46 @@
     .ver dl { grid-template-columns: minmax(0, 1fr); }
     .bar-row { grid-template-columns: 90px minmax(0, 1fr) 70px; }
   }
-  @media (max-width: 520px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 720px) {
+    .work { padding-block: 16px 40px; }
+    .head h1 { font-size: 21px; }
+    .head .actions, .head .actions .btn { flex: 1 1 auto; }
+    .card-pad { padding: 14px; }
+    .toolbar, .dispatchbar { padding: 12px; }
+    .dispatchbar > .field, .dispatchbar > .btn { flex: 1 1 100%; }
+    .tabs { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+    .tab { flex-shrink: 0; }
+    .who { grid-template-columns: minmax(0, 1fr); }
+    .bar-row { grid-template-columns: 80px minmax(0, 1fr) 60px; gap: 8px; font-size: 12.5px; }
+    .ver dl { grid-template-columns: minmax(0, 1fr); }
+    /* Tablas de listas como tarjetas */
+    .t-cards, .t-cards tbody, .t-cards tr, .t-cards td { display: block; }
+    .t-cards th { display: none; }
+    .t-cards th:has(input) { display: flex; align-items: center; gap: 8px; background: none; padding: 0; text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--ink); }
+    .t-cards th:has(input)::after { content: "Seleccionar todas"; }
+    .t-cards tr { margin: 10px 12px; border: 1px solid var(--line); border-radius: 12px; padding: 6px 0; background: var(--surface); }
+    .t-cards thead tr { display: flex; margin: 0; padding: 10px 12px 0; border: 0; background: none; }
+    .t-cards td { position: relative; border: 0; padding: 6px 14px 6px 140px; min-height: 32px; }
+    .t-cards td::before { content: attr(data-label); position: absolute; left: 14px; top: 9px; width: 116px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+    .t-cards td:not([data-label]) { padding-left: 14px; }
+    .t-cards td:not([data-label])::before { content: none; }
+    .t-cards td.actions { white-space: normal; }
+    .t-cards .acts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .panel-item { flex-wrap: wrap; }
+    .panel-item .grow { flex-basis: 50%; }
+    .t-cards td.actions > .btn { margin: 0 4px 4px 0; }
+    .t-cards tr.pending { background: var(--warn-soft); box-shadow: inset 4px 0 0 var(--warn); border-color: var(--warn); }
+    .t-cards tr.pending td { background: none; box-shadow: none; }
+    .t-cards td.empty { text-align: center; }
+    .t-cards tr:has(td.empty) { border: 0; background: none; }
+    /* Modales como hoja inferior */
+    .overlay { padding: 0; place-items: end stretch; }
+    .modal { width: 100%; max-height: 94vh; border-radius: 16px 16px 0 0; }
+    .modal-h, .modal-b { padding-left: 16px; padding-right: 16px; }
+    .modal-f { padding: 12px 16px max(12px, env(safe-area-inset-bottom, 0px)); }
+    .modal-f .btn { flex: 1 1 auto; }
+  }
+  @media (max-width: 520px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .kpi b { font-size: 24px; } }
   @media (prefers-reduced-motion: reduce) { .side { transition: none; } }
 </style>
 
@@ -513,6 +556,16 @@
     // El despachador sin empresas activas no puede usar la plataforma (EnsureCompanyAssigned)
     if (!coId && user.role === 'despachador') { root.innerHTML = demoBar() + shell(noCompany()); return; }
     root.innerHTML = demoBar() + shell(coBar() + viewHtml());
+    labelCells();
+  }
+  // En móvil las tablas .t-cards se ven como tarjetas: cada celda muestra el título de su columna
+  function labelCells() {
+    root.querySelectorAll('table.t-cards').forEach(function (t) {
+      var heads = [].map.call(t.querySelectorAll('thead th'), function (th) { return th.textContent.trim(); });
+      t.querySelectorAll('tbody tr').forEach(function (tr) {
+        [].forEach.call(tr.children, function (td, i) { if (heads[i] && !td.hasAttribute('colspan')) td.setAttribute('data-label', heads[i]); });
+      });
+    });
   }
   function demoBar() {
     return '<div class="demo-bar">Demostración con datos ficticios. Los cambios se guardan solo en este navegador. <button type="button" data-a="reset">Reiniciar demo</button></div>';
@@ -620,7 +673,7 @@
       tab('active', 'Activas', act.length) + tab('cancelled', 'Canceladas', cancelled.length) + tab('finished', 'Finalizadas', finished.length) +
       '</div><input class="input search" id="q" type="search" placeholder="Buscar habitación o paciente" value="' + esc(ui.q) + '" data-a="search" aria-label="Buscar"></div>' +
       '<div style="padding:10px 16px 0">' + legend() + '</div>' +
-      '<div class="twrap"><table><thead><tr><th>Hab.</th><th>Paciente</th><th>Día</th><th>Tiempo</th><th>Consistencia</th><th>Especificaciones</th><th>Aislam.</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      '<div class="twrap"><table class="t-cards"><thead><tr><th>Hab.</th><th>Paciente</th><th>Día</th><th>Tiempo</th><th>Consistencia</th><th>Especificaciones</th><th>Aislam.</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
   }
   function kpi(label, n, sub, cls) { return '<div class="card kpi ' + cls + '"><span>' + label + '</span><b>' + n + '</b><small>' + sub + '</small></div>'; }
   function tab(k, label, n) { return '<button type="button" class="tab" role="tab" aria-selected="' + (ui.tab === k) + '" data-a="tab" data-k="' + k + '">' + label + ' (' + n + ')</button>'; }
@@ -666,7 +719,7 @@
       '<button type="button" class="btn btn-success" data-a="dispatch"' + (nsel ? '' : ' disabled') + '>🚚 Despachar seleccionadas (' + nsel + ')</button>' +
       '<span class="small muted" style="flex:1 1 220px">El nutricionista confirma la recepción; solo lo recibido se factura.</span></div>' +
       '<div style="padding:10px 16px 0">' + legend() + '</div>' +
-      '<div class="twrap"><table><thead><tr><th><input type="checkbox" data-a="selAll" aria-label="Seleccionar todas" style="width:18px;height:18px;accent-color:var(--b-primary)"></th><th>Estado</th><th>Hab.</th><th>Paciente</th><th>Tiempo</th><th>Consistencia</th><th>Especificaciones</th><th>Observaciones</th><th>Aislam.</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      '<div class="twrap"><table class="t-cards"><thead><tr><th><input type="checkbox" data-a="selAll" aria-label="Seleccionar todas" style="width:18px;height:18px;accent-color:var(--b-primary)"></th><th>Estado</th><th>Hab.</th><th>Paciente</th><th>Tiempo</th><th>Consistencia</th><th>Especificaciones</th><th>Observaciones</th><th>Aislam.</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
   }
   function diffCell(before, after, labels, cls) {
     var added = after.filter(function (k) { return before.indexOf(k) < 0; }), removed = before.filter(function (k) { return after.indexOf(k) < 0; });
@@ -697,7 +750,7 @@
       '<div class="kpis" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr))">' + summary + '</div>' +
       '<div class="card"><div class="toolbar"><div class="tabs"><select class="input" data-a="dlService" aria-label="Servicio"><option value="">Todos los servicios</option>' + MEALS.map(function (m) { return '<option value="' + m + '"' + (ui.dlService === m ? ' selected' : '') + '>' + MEAL_LABEL[m] + '</option>'; }).join('') + '</select>' +
       '<select class="input" data-a="dlState" aria-label="Estado"><option value="">Todos los estados</option><option value="pending"' + (ui.dlState === 'pending' ? ' selected' : '') + '>Sin recibir</option><option value="received"' + (ui.dlState === 'received' ? ' selected' : '') + '>Recibidos</option><option value="voided"' + (ui.dlState === 'voided' ? ' selected' : '') + '>Anulados o no llegaron</option></select></div><span class="small muted">' + fmtDate(T) + '</span></div>' +
-      '<div class="twrap"><table><thead><tr><th>Hab.</th><th>Paciente</th><th>Tiempo</th><th>Despachado</th><th>Recepción</th></tr></thead><tbody>' + body + '</tbody></table></div></div>';
+      '<div class="twrap"><table class="t-cards"><thead><tr><th>Hab.</th><th>Paciente</th><th>Tiempo</th><th>Despachado</th><th>Recepción</th></tr></thead><tbody>' + body + '</tbody></table></div></div>';
   }
 
   // ── Historial ──
@@ -822,7 +875,7 @@
     }).join('') || '<tr><td colspan="7" class="empty">Todavía no tienes empresas. Crea la primera.</td></tr>';
     return '<div class="head"><div><h1>Empresas</h1><p>' + (admin ? 'Empresas que atiende el despacho. Cada una tiene su jefe de despacho y sus datos separados.' : 'Tus empresas: créalas, edítalas o desactívalas. Las de otros jefes de despacho no aparecen.') + '</p></div><div class="actions"><button type="button" class="btn btn-primary" data-a="newCo">+ Nueva empresa</button></div></div>' +
       '<div class="box box-info">Las empresas no se borran: al desactivarla sale de los selectores y conserva su historial. La predeterminada no se desactiva.</div>' +
-      '<div class="card"><div class="twrap"><table><thead><tr><th>Empresa</th><th>NIT</th><th>Contacto</th>' + (admin ? '<th>Jefe de despacho</th>' : '') + '<th>Dietas activas</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      '<div class="card"><div class="twrap"><table class="t-cards"><thead><tr><th>Empresa</th><th>NIT</th><th>Contacto</th>' + (admin ? '<th>Jefe de despacho</th>' : '') + '<th>Dietas activas</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
   }
   function openCompany(c) {
     var admin = user.role === 'admin', v = c || { name: '', nit: '', contact: '', phone: '', email: '', managerId: '' };
@@ -887,7 +940,7 @@
       '<div class="field"><label for="nu-role">Rol</label><select class="input" id="nu-role">' + roles.map(function (r) { return '<option value="' + r + '">' + ROLE[r] + '</option>'; }).join('') + '</select></div>' +
       '<div class="field full"><span class="lbl">Empresas</span>' + coChecks('nu-cos', [], admin, false) + '<span class="small muted">' + hint + '</span></div>' +
       '<div class="field"><button type="submit" class="btn btn-primary">Crear usuario</button></div><p class="err-msg full" id="nu-err" hidden></p></form></div>' +
-      '<div class="card"><div class="twrap"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Empresas</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      '<div class="card"><div class="twrap"><table class="t-cards"><thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Empresas</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
   }
   function openUserCos(u) {
     var admin = user.role === 'admin', ids = u.companies === 'all' ? [] : u.companies;
@@ -900,7 +953,7 @@
   function vAuditoria() {
     var rows = S.audit.map(function (a) { var c = a.co ? coById(a.co) : null; return '<tr><td class="num">' + fmtDateTime(a.at) + '</td><td>' + esc(a.who) + '</td><td>' + (c ? esc(c.name) : '<span class="muted">—</span>') + '</td><td>' + esc(a.what) + '</td></tr>'; }).join('');
     return '<div class="head"><div><h1>Auditoría</h1><p>Registro de lo que se hizo en la demo. Sin datos clínicos: solo habitación o identificadores.</p></div></div>' +
-      '<div class="card"><div class="twrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Empresa</th><th>Acción</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      '<div class="card"><div class="twrap"><table class="t-cards"><thead><tr><th>Fecha</th><th>Usuario</th><th>Empresa</th><th>Acción</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
   }
 
   // ════════════════ Modales ════════════════
