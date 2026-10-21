@@ -44,7 +44,8 @@
             >camilo<span class="accent">.</span>rojas</span
           >
         </a>
-        <nav class="nav__links" aria-label="Secciones">
+        <nav class="nav__links" id="navLinks" aria-label="Secciones">
+          <span class="nav__indicator" aria-hidden="true"></span>
           <a href="#about" data-i18n="nav.about">Sobre mí</a>
           <a href="#skills" data-i18n="nav.skills">Habilidades</a>
           <a href="#experience" data-i18n="nav.experience">Experiencia</a>
@@ -95,6 +96,27 @@
               stroke-linejoin="round"
             >
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+          <button
+            class="icon-btn nav__toggle"
+            id="menuToggle"
+            type="button"
+            aria-label="Abrir menú"
+            aria-controls="navLinks"
+            aria-expanded="false"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path class="i-menu" d="M4 7h16M4 12h16M4 17h16" />
+              <path class="i-close" d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
         </div>
@@ -327,11 +349,7 @@
             <span class="badge" data-i18n="proj.nt.badge">Demo interactivo</span>
             <h4>NutriTrack</h4>
             <p data-i18n="proj.nt.desc">
-              Plataforma hospitalaria de gestión de dietas: el nutricionista
-              registra y versiona las dietas por habitación, la cocina ve los
-              cambios en tiempo real, despacha y el nutricionista confirma la
-              recepción. Incluye facturación por empresa, reportes Excel,
-              historial de cambios y roles con permisos.
+              Gestión de dietas hospitalarias en tiempo real entre nutrición y cocina.
             </p>
             <ul class="project__stack mono">
               <li>Laravel 10</li><li>Livewire 3</li><li>MySQL</li>

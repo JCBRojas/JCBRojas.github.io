@@ -81,12 +81,53 @@ a { color: inherit; }
 }
 .brand__name { font-family: "JetBrains Mono", monospace; font-size: 15px; }
 .nav__links { display: none; gap: 24px; margin-left: auto; }
-.nav__links a { text-decoration: none; color: var(--muted); font-size: 15px; }
+.nav__links a { position: relative; text-decoration: none; color: var(--muted); font-size: 15px; transition: color .2s; }
 .nav__links a:hover { color: var(--text); }
+.nav__links a.is-active { color: var(--accent); }
 .nav__actions { display: flex; gap: 8px; margin-left: auto; }
+.i-close { display: none; }
+.nav.is-open .i-menu { display: none; }
+.nav.is-open .i-close { display: block; }
+.nav__toggle svg { transition: transform .3s ease; }
+.nav.is-open .nav__toggle svg { transform: rotate(90deg); }
+.nav__indicator { display: none; }
+/* Mobile: links slide down below the bar */
+@media (max-width: 819px) {
+  .nav__links {
+    display: flex; flex-direction: column; gap: 0;
+    position: absolute; top: 100%; left: 0; right: 0;
+    padding: 8px 16px 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    opacity: 0; visibility: hidden; transform: translateY(-10px); pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  }
+  .nav.is-open .nav__links {
+    opacity: 1; visibility: visible; transform: none; pointer-events: auto;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .nav__links a {
+    padding: 12px 4px; font-size: 17px; border-bottom: 1px solid var(--line);
+    opacity: 0; transform: translateY(-6px);
+    transition: opacity .25s ease, transform .25s ease, color .2s;
+  }
+  .nav.is-open .nav__links a { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 40ms); }
+  .nav__links a:last-child { border-bottom: 0; }
+}
 @media (min-width: 820px) {
-  .nav__links { display: flex; }
+  .nav__links { display: flex; position: relative; }
   .nav__actions { margin-left: 16px; }
+  .nav__toggle { display: none; }
+  .nav__indicator {
+    display: block; position: absolute; left: 0; bottom: -6px; height: 2px; width: 0;
+    border-radius: 2px; background: var(--accent); opacity: 0;
+    transition: transform .4s cubic-bezier(.4, 0, .2, 1), width .4s cubic-bezier(.4, 0, .2, 1), opacity .25s;
+  }
+  .nav__indicator.is-on { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav__links, .nav__links a, .nav__indicator, .nav__toggle svg { transition: none !important; }
 }
 .chip, .icon-btn {
   height: 36px; border: 1px solid var(--line); background: var(--surface); color: var(--text);

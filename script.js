@@ -29,7 +29,7 @@ const EN = {
   'exp.cetasdi.desc': 'Taught programming fundamentals and provided technical support for the institution’s equipment.',
   'proj.title': 'Projects',
   'proj.nt.badge': 'Interactive demo',
-  'proj.nt.desc': 'Hospital diet management platform: dietitians record and version each room’s diet, the kitchen sees changes in real time and dispatches meals, and dietitians confirm receipt. Includes per-client billing, Excel reports, change history and role-based permissions.',
+  'proj.nt.desc': 'Real-time hospital diet management between dietitians and kitchen.',
   'proj.nt.cta': 'View demo',
   'edu.title': 'Education',
   'edu.studies': 'Studies',
@@ -76,6 +76,7 @@ function setLang(lang) {
     ? 'Camilo Rojas · Full-stack Developer'
     : 'Camilo Rojas · Desarrollador Full-stack';
   document.getElementById('themeToggle').setAttribute('aria-label', lang === 'en' ? 'Toggle theme' : 'Cambiar tema');
+  document.getElementById('menuToggle').setAttribute('aria-label', lang === 'en' ? 'Toggle menu' : 'Abrir menú');
   try { localStorage.setItem('lang', lang); } catch (e) {}
 }
 
@@ -85,6 +86,7 @@ setLang(saved || ((navigator.language || 'es').toLowerCase().startsWith('es') ? 
 
 document.getElementById('langToggle').addEventListener('click', () => {
   setLang(root.lang === 'es' ? 'en' : 'es');
+  moveIndicator();
 });
 
 document.getElementById('themeToggle').addEventListener('click', () => {
@@ -94,6 +96,54 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   root.dataset.theme = next;
   try { localStorage.setItem('theme', next); } catch (e) {}
 });
+
+// Mobile menu
+const nav = document.querySelector('.nav');
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = [...document.querySelectorAll('#navLinks a')];
+
+function setMenu(open) {
+  nav.classList.toggle('is-open', open);
+  menuToggle.setAttribute('aria-expanded', open);
+}
+menuToggle.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+navLinks.forEach(a => a.addEventListener('click', () => setMenu(false)));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+document.addEventListener('click', e => { if (!nav.contains(e.target)) setMenu(false); });
+
+navLinks.forEach((a, i) => a.style.setProperty('--i', i)); // stagger on open
+
+// Sliding underline under the active link (desktop)
+const indicator = document.querySelector('.nav__indicator');
+function moveIndicator() {
+  const active = navLinks.find(a => a.classList.contains('is-active'));
+  indicator.classList.toggle('is-on', !!active);
+  if (!active) return;
+  indicator.style.width = active.offsetWidth + 'px';
+  indicator.style.transform = `translateX(${active.offsetLeft}px)`;
+}
+addEventListener('resize', moveIndicator);
+document.fonts && document.fonts.ready.then(moveIndicator);
+
+// Highlight the link of the section in view
+if ('IntersectionObserver' in window) {
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      navLinks.forEach(a => {
+        const on = a.getAttribute('href') === '#' + e.target.id;
+        a.classList.toggle('is-active', on);
+        if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      });
+      moveIndicator();
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  navLinks.forEach(a => {
+    const section = document.querySelector(a.getAttribute('href'));
+    if (section) spy.observe(section);
+  });
+  spy.observe(document.getElementById('top')); // clears the highlight back at the hero
+}
 
 // Scroll reveal
 const reveals = document.querySelectorAll('.reveal');
