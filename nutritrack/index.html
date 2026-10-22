@@ -28,6 +28,7 @@
     --font: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
     --side-w: 248px;
+    --bar-h: 34px;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -91,11 +92,11 @@
   .room { display: inline-block; min-width: 40px; text-align: center; padding: 2px 8px; border-radius: 6px; background: var(--ink); color: var(--bg); font: 700 12.5px var(--mono); }
 
   /* ── Banner de demo ── */
-  .demo-bar { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 6px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px)); background: var(--warn-soft); color: var(--warn); font-size: 12.5px; font-weight: 600; text-align: center; }
+  .demo-bar { position: sticky; top: 0; z-index: 45; min-height: var(--bar-h); box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 6px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px)); background: var(--warn-soft); color: var(--warn); font-size: 12.5px; font-weight: 600; text-align: center; }
   .demo-bar button { background: none; border: 0; color: inherit; text-decoration: underline; cursor: pointer; font-weight: 700; padding: 0; }
 
   /* ── Login ── */
-  .login { min-height: calc(100vh - 34px); display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+  .login { min-height: calc(100vh - var(--bar-h)); display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
   .login-hero { background: var(--brand); color: #fff; padding: 56px max(24px, env(safe-area-inset-left, 0px)) 56px clamp(24px, 6vw, 72px); display: flex; flex-direction: column; justify-content: center; gap: 18px; }
   .login-hero .logo { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 800; letter-spacing: -.5px; }
   .login-hero .logo::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
@@ -114,28 +115,28 @@
   .tip { border-left: 4px solid var(--brand); background: var(--brand-soft); color: var(--ink); padding: 10px 14px; border-radius: 8px; font-size: 13.5px; }
 
   /* ── App ── */
-  .app { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); min-height: calc(100vh - 34px); }
-  .side { background: var(--brand); color: #fff; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
-  .side-logo { padding: 22px 20px 16px; border-bottom: 1px solid var(--brand-hover); }
+  .app { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); min-height: calc(100vh - var(--bar-h)); }
+  .side { background: var(--brand); color: #fff; display: flex; flex-direction: column; position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h)); height: calc(100dvh - var(--bar-h)); }
+  .side-logo { padding: 14px 18px 10px; border-bottom: 1px solid var(--brand-hover); }
   .side-logo b { display: flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 800; }
   .side-logo b::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
   .side-logo small { display: block; font-size: 11.5px; margin-top: 3px; }
-  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
-  .nav-sec { padding: 14px 10px 6px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
-  .nav-sec:first-child { padding-top: 4px; }
-  .nav a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 500; }
+  .nav { flex: 1; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 1px; }
+  .nav-sec { padding: 9px 10px 3px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
+  .nav-sec:first-child { padding-top: 2px; }
+  .nav a { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 500; }
   .nav a:hover { background: var(--brand-hover); }
   .nav a[aria-current="page"] { background: #E8E5FB; color: #4A3BB0; font-weight: 700; }
   .nav svg { width: 16px; height: 16px; flex-shrink: 0; }
   .nav .count { margin-left: auto; background: var(--b-warning); color: #000; border-radius: 999px; font-size: 11px; font-weight: 800; padding: 0 7px; }
-  .side-foot { padding: 12px 10px 14px; border-top: 1px solid var(--brand-hover); display: grid; gap: 8px; }
-  .me { display: flex; align-items: center; gap: 10px; padding: 4px 8px; }
-  .me .av { width: 34px; height: 34px; border-radius: 50%; background: #fff; color: var(--brand); display: grid; place-items: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+  .side-foot { padding: 8px 10px 10px; border-top: 1px solid var(--brand-hover); display: grid; gap: 6px; }
+  .me { display: flex; align-items: center; gap: 10px; padding: 2px 8px; }
+  .me .av { width: 30px; height: 30px; border-radius: 50%; background: #fff; color: var(--brand); display: grid; place-items: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
   .me b { display: block; font-size: 13.5px; } .me small { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
-  .side-foot .btn { width: 100%; }
-  .nav-off { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #fff; opacity: .6; cursor: not-allowed; font-weight: 500; }
+  .side-foot .btn { width: 100%; padding-block: 5px; }
+  .nav-off { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 8px; color: #fff; opacity: .6; cursor: not-allowed; font-weight: 500; }
   .nav-off .count { background: transparent; border: 1px solid currentColor; color: #fff; }
-  .plan { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,.12); color: #fff; }
+  .plan { display: grid; gap: 1px; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.12); color: #fff; }
   .plan b { font-size: 13px; } .plan small { font-size: 11.5px; }
   .plan-hero { padding: 12px 14px; max-width: 460px; }
 
@@ -264,7 +265,8 @@
     .login-hero { padding: 32px max(16px, env(safe-area-inset-right, 0px)) 28px max(16px, env(safe-area-inset-left, 0px)); }
     .login-pick { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 40px max(16px, env(safe-area-inset-left, 0px)); }
     .app { grid-template-columns: minmax(0, 1fr); }
-    .side { position: fixed; inset: 0 auto 0 0; width: min(280px, 86vw); z-index: 60; transform: translateX(-100%); visibility: hidden; transition: transform .2s, visibility 0s .2s; padding-top: env(safe-area-inset-top, 0px); }
+    .demo-bar { position: static; }
+    .side { position: fixed; inset: 0 auto 0 0; height: auto; width: min(280px, 86vw); z-index: 60; transform: translateX(-100%); visibility: hidden; transition: transform .2s, visibility 0s .2s; padding-top: env(safe-area-inset-top, 0px); }
     .side.open { transform: none; visibility: visible; transition: transform .2s; box-shadow: 0 0 40px rgba(0,0,0,.35); }
     .scrim { position: fixed; inset: 0; background: var(--overlay); z-index: 55; }
     .topbar { display: flex; align-items: center; gap: 10px; padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; }
